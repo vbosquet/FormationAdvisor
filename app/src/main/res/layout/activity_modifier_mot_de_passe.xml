@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.company.formationadvisor.activites.ModifierMotDePasse"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mot_de_passe_actuel"/>
+
+    <EditText
+        android:id="@+id/mot_de_passe_actuel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/nouveau_mot_de_passe"/>
+
+    <EditText
+        android:id="@+id/nouveau_mot_de_passe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirmation_mot_de_passe"/>
+
+    <EditText
+        android:id="@+id/confirmation_mot_de_passe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/bouton_modifier_mot_de_passe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/bouton_modifier_mot_de_passe"
+        android:onClick="modifierMotDePasse"/>
+
+</LinearLayout>

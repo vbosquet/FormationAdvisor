@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Formation Advisor</string>
+    <string name="bouton_inscription">SIGN IN</string>
+    <string name="bouton_connexion">LOG IN</string>
+    <string name="bouton_enregistrer">SAVE</string>
+    <string name="bouton_modifier_mot_de_passe">Change the password</string>
+    <string name="nom_utilisateur">Last Name</string>
+    <string name="prenom_utilisateur">First Name</string>
+    <string name="pseudo_utilisateur">Username</string>
+    <string name="mot_de_passe"> Password</string>
+    <string name="email_utilisateur">Email</string>
+    <string name="text_view_nom">Last Name: </string>
+    <string name="text_view_prenom">First Name: </string>
+    <string name="text_view_email">Email: </string>
+    <string name="mot_de_passe_actuel">Current Password</string>
+    <string name="nouveau_mot_de_passe">New Password</string>
+    <string name="confirmation_mot_de_passe">Confirm your password</string>
+    <string name="suppression_compte">Are you sure you want to delete your account?</string>
+    <string name="bouton_suppression_compte">Delete my account</string>
+    <string name="search_title">Seek training</string>
+    <string name="nom_formation">Name of training: </string>
+    <string name="description_formation">Description: </string>
+    <string name="durée_formation">Duration</string>
+    <string name="date_debut_formation">Start date: </string>
+    <string name="date_fin_formation">End date: </string>
+    <string name="nom_centre_formation">Establishment: </string>
+    <string name="adresse_centre_formation">Street: </string>
+    <string name="code_postal">Postal code: </string>
+    <string name="ville_centre_formation">Locality: </string>
+    <string name="telephone_centre_formation">Phone number: </string>
+    <string name="email_centre_formation">Email: </string>
+    <string name="site_centre_formation">Website: </string>
+    <string name="categorie_formation">Category: </string>
+    <string name="bouton_suivant">NEXT</string>
+    <string name="titre_evaluation">Your title: </string>
+    <string name="commentaire_evaluation">Your comment: </string>
+    <string name="bouton_ajouter_evaluation">Add a comment</string>
+    <string name="bouton_supprimer_formation">Delete</string>
+    <string name="option_menu_tableau_de_bord">Dashboard</string>
+    <string name="option_menu_deconnexion">LOG Out</string>
+    <string name="bouton_rechercher">Find a nearby training center</string>
+
+</resources>
