@@ -42,7 +42,8 @@ public class CreerNouvelleFormation extends AsyncTask<String, String, String> {
                     "&date_debut="+dateDebut+"&date_fin="+dateFin+"&description="+encodedString1+
                     "&id_centre_formation="+ idCentreFormation+
                     "&id_utilisateur="+idUtilisateur+
-                    "&token="+token);
+                    "&token="+token+
+                    "&validation=false");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();

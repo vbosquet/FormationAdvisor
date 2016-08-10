@@ -77,6 +77,8 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                     listeIdCentreFormation.add(jsonData.getString("id_centre_formation"));
                 }
 
+
+
                 ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_listview, listeLibelleFormation);
                 final ListView listView = (ListView) findViewById(R.id.resultat_recherche_formation);
                 listView.setAdapter(adapter);

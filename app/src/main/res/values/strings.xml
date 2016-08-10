@@ -39,5 +39,8 @@
     <string name="option_menu_tableau_de_bord">Tableau de bord</string>
     <string name="option_menu_deconnexion">Déconnexion</string>
     <string name="bouton_rechercher">Rechercher un centre de formation à proximité</string>
+    <string name="auteur_annonce_formation">Auteur de l\'annonce : </string>
+    <string name="bouton_approuver">VALIDER</string>
+    <string name="bouton_contacter">CONTACTER</string>
 
 </resources>

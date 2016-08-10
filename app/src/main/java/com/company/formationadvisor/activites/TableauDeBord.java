@@ -3,6 +3,8 @@ package com.company.formationadvisor.activites;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,57 +22,87 @@ public class TableauDeBord extends AppCompatActivity {
 
     String[] liste_action_utilisateur = {"Modifier mon profil", "Rechercher ma position actuelle", "Référencer une formation",
             "Modifier mes formations", "Paramètres", "Déconnexion"};
-
+    String[] liste_action_admin = {"Approuver les formations", "Déconnexion"};
     Intent intent;
+    SharedPreferences preferences;
+    String admin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tableau_de_bord);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        admin = preferences.getString("admin", "");
+
         handleIntent(getIntent());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_listview, liste_action_utilisateur);
-        final ListView listView = (ListView) findViewById(R.id.tableau_de_bord);
-        listView.setAdapter(adapter);
+        if (admin.equals("false")) {
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = listView.getItemAtPosition(position);
-                String action = o.toString();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_listview, liste_action_utilisateur);
+            final ListView listView = (ListView) findViewById(R.id.tableau_de_bord);
+            listView.setAdapter(adapter);
 
-                if (action.equals(liste_action_utilisateur[0])) {
-                    intent = new Intent(getApplicationContext(), ModifierProfil.class);
-                    startActivity(intent);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Object o = listView.getItemAtPosition(position);
+                    String action = o.toString();
+
+                    if (action.equals(liste_action_utilisateur[0])) {
+                        intent = new Intent(getApplicationContext(), ModifierProfil.class);
+                        startActivity(intent);
+                    }
+
+                    if (action.equals(liste_action_utilisateur[1])) {
+                        intent = new Intent(getApplicationContext(), RecherchePosition.class);
+                        startActivity(intent);
+                    }
+
+                    if (action.equals(liste_action_utilisateur[2])) {
+                        intent = new Intent(getApplicationContext(), NouveauCentreFormation.class);
+                        startActivity(intent);
+                    }
+
+                    if (action.equals(liste_action_utilisateur[3])) {
+                        intent = new Intent(getApplicationContext(), MaListeDeFormations.class);
+                        startActivity(intent);
+                    }
+
+                    if (action.equals(liste_action_utilisateur[4])) {
+                        intent = new Intent(getApplicationContext(), Parametres.class);
+                        startActivity(intent);
+                    }
+
+                    if (action.equals(liste_action_utilisateur[5])) {
+                        intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
                 }
+            });
+        } else {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_listview, liste_action_admin);
+            final ListView listView = (ListView) findViewById(R.id.tableau_de_bord);
+            listView.setAdapter(adapter);
 
-                if (action.equals(liste_action_utilisateur[1])) {
-                    intent = new Intent(getApplicationContext(), RecherchePosition.class);
-                    startActivity(intent);
-                }
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Object o = listView.getItemAtPosition(position);
+                    String action = o.toString();
 
-                if (action.equals(liste_action_utilisateur[2])) {
-                    intent = new Intent(getApplicationContext(), NouveauCentreFormation.class);
-                    startActivity(intent);
-                }
+                    if (action.equals(liste_action_admin[0])) {
+                        intent = new Intent(getApplicationContext(), ApprouverFormation.class);
+                        startActivity(intent);
+                    }
 
-                if (action.equals(liste_action_utilisateur[3])) {
-                    intent = new Intent(getApplicationContext(), MaListeDeFormations.class);
-                    startActivity(intent);
+                    if (action.equals(liste_action_admin[1])) {
+                        intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
                 }
-
-                if (action.equals(liste_action_utilisateur[4])) {
-                    intent = new Intent(getApplicationContext(), Parametres.class);
-                    startActivity(intent);
-                }
-
-                if (action.equals(liste_action_utilisateur[5])) {
-                    intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
+            });
+        }
     }
 
     @Override

@@ -38,7 +38,7 @@ public class CreerNouvelUtilisateur extends AsyncTask<String, String, String>{
         try {
             url = new URL("http://"+ip+"/webService_Android/ajouter_utilisateur.php?nom_utilisateur="+nom+
                     "&prenom_utilisateur="+prenom+"&pseudo="+pseudo+
-                    "&mot_de_passe="+motDePasse+"&email="+email+"&token="+token);
+                    "&mot_de_passe="+motDePasse+"&email="+email+"&token="+token+"&admin=false");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();

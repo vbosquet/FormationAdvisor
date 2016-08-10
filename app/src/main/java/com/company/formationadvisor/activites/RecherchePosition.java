@@ -179,7 +179,6 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
 
     @Override
     public void afficherAdressesCentreFormation(String string) {
-        Log.i("CONTENT_STRING", string);
         try {
             JSONObject jsonObject = new JSONObject(string);
             JSONArray jsonArray = jsonObject.getJSONArray("liste_centre_formation");
@@ -193,8 +192,6 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
                 listeAdresses.put(jsonData.getString("libelle"), adresseComplete);
                 listeId.put(jsonData.getString("libelle"), jsonData.getString("id_centre_formation"));
             }
-
-            Log.i("CONTENT_ID", listeId.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -218,9 +215,6 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
                 e.printStackTrace();
             }
 
-            Log.i("CONTENT_LATITUDE", String.valueOf(locationAdresse.getLatitude()));
-            Log.i("CONTENT_LONGITUDE", String.valueOf(locationAdresse.getLongitude()));
-
             if((locationAdresse.getLatitude() <= maLatitude + 0.5 &&
                     locationAdresse.getLatitude() >= maLatitude - 0.5) ||
                     (locationAdresse.getLongitude() <= maLongitude + 0.5 &&
@@ -228,8 +222,6 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
                 listeLibelleCentreFormation.add(entry.getKey());
             }
         }
-
-        Log.i("CONTENT_LIBELLE", listeLibelleCentreFormation.toString());
 
         ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_listview, listeLibelleCentreFormation);
         listView = (ListView) findViewById(R.id.liste_centre_proximite);

@@ -5,78 +5,65 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
-import com.company.formationadvisor.taches_asynchrones.RechercherParIdUtilisateur;
+import com.company.formationadvisor.taches_asynchrones.RechercherFormationAValider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
-public class MaListeDeFormations extends AppCompatActivity implements RechercherParIdUtilisateur.IRechercheParIdUtilisateur {
+public class ApprouverFormation extends AppCompatActivity implements RechercherFormationAValider.IRechercheFormationAValider{
 
-    ArrayList listeLibelleFormation, listeIdFormation, listeIdCentreFormation;
     SharedPreferences preferences;
-    Integer idUtilisateur;
-    String token;
-    Intent intent;
     IPAddress ipAddress;
+    String token;
+    ArrayList listeLibelleFormation, listeIdFormation, listeIdCentreFormation, listeIdUtilisateur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ma_liste_de_formations);
+        setContentView(R.layout.activity_approuver_formation);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        idUtilisateur = preferences.getInt("id", 0);
         token = preferences.getString("token", "");
 
         ipAddress = new IPAddress();
 
-        RechercherParIdUtilisateur tache = new RechercherParIdUtilisateur(this, ipAddress);
-        tache.execute(idUtilisateur, token);
+        RechercherFormationAValider tache = new RechercherFormationAValider(this, ipAddress);
+        tache.execute(token);
+
     }
 
     @Override
-    public void afficherInfoFormation(final String string) {
-        Log.i("CONTENT_STRING", string);
+    public void afficherFormationAValider(String string) {
         try {
             JSONObject jsonObject = new JSONObject(string);
-            JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
-
-            if(jsonArray.length() == 0) {
-                Toast.makeText(this, "Vous n'avez référencé aucune formation.", Toast.LENGTH_SHORT).show();
-            }
+            JSONArray jsonArray = jsonObject.getJSONArray("formation_a_valider");
 
             listeLibelleFormation = new ArrayList();
             listeIdFormation = new ArrayList();
             listeIdCentreFormation = new ArrayList();
+            listeIdUtilisateur = new ArrayList();
 
-            for(int i = 0; i<jsonArray.length(); i++) {
+            for(int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonData = jsonArray.getJSONObject(i);
                 listeLibelleFormation.add(jsonData.getString("libelle"));
                 listeIdFormation.add(jsonData.getString("id_formation"));
                 listeIdCentreFormation.add(jsonData.getString("id_centre_formation"));
+                listeIdUtilisateur.add(jsonData.getString("id_utilisateur"));
             }
 
-            ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_listview, listeLibelleFormation);
-            final ListView listView = (ListView) findViewById(R.id.liste_de_mes_formations);
-            listView.setAdapter(adapter);
+            ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.activity_listview, listeLibelleFormation);
+            final ListView listView = (ListView) findViewById(R.id.formation_a_valider);
+            listView.setAdapter(arrayAdapter);
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -87,9 +74,10 @@ public class MaListeDeFormations extends AppCompatActivity implements Rechercher
                     for (int i = 0; i<listeLibelleFormation.size(); i++){
 
                         if (action.equals(listeLibelleFormation.get(i))) {
-                            Intent intent = new Intent(getApplicationContext(), ModifierFormation.class);
+                            Intent intent = new Intent(getApplicationContext(), FicheFormationAValider.class);
                             intent.putExtra("idFormation", String.valueOf(listeIdFormation.get(i)));
                             intent.putExtra("idCentreFormation", String.valueOf(listeIdCentreFormation.get(i)));
+                            intent.putExtra("idUtilisateur", String.valueOf(listeIdUtilisateur.get(i)));
                             startActivity(intent);
                         }
                     }
@@ -99,28 +87,7 @@ public class MaListeDeFormations extends AppCompatActivity implements Rechercher
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

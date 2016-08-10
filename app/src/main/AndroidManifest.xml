@@ -42,7 +42,8 @@
         <activity android:name=".activites.FicheFormation" />
         <activity android:name=".activites.AjouterEvaluation" />
         <activity android:name=".activites.RecherchePosition" />
-        <activity android:name=".activites.FicheCentreFormation"></activity>
+        <activity android:name=".activites.FicheCentreFormation" />
+        <activity android:name=".activites.ApprouverFormation" />
+        <activity android:name=".activites.FicheFormationAValider"/>
     </application>
-
 </manifest>

@@ -101,6 +101,7 @@ public class Connexion extends AppCompatActivity implements ConnexionFragment.IC
                 editor.putString("pseudo", infosUtilisateur.getString("username"));
                 editor.putInt("id", Integer.parseInt(infosUtilisateur.getString("id_utilisateur")));
                 editor.putString("token", salt);
+                editor.putString("admin", infosUtilisateur.getString("admin"));
                 editor.apply();
 
                 intent = new Intent(this, TableauDeBord.class);

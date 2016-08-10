@@ -9,27 +9,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 
-public class RechercherEvaluation extends AsyncTask<String, String, String> {
+public class RechercherFormationAValider extends AsyncTask<String, String, String> {
 
-    private IRechercheEvaluationParIdFormation callback;
+    private IRechercheFormationAValider callback;
     private String ip;
 
-    public RechercherEvaluation (IRechercheEvaluationParIdFormation callback, IPAddress ipAddress) {
+    public RechercherFormationAValider(IRechercheFormationAValider callback, IPAddress ipAddress) {
         this.callback = callback;
         this.ip = ipAddress.getIpAddress();
     }
+
     @Override
     protected String doInBackground(String... params) {
-        String idFormation = params[0];
-        String token = params[1];
+        String token = params[0];
 
         try {
-            URL url = new URL("http://"+ip+"/webService_Android/rechercher_evaluation.php?id_formation="+idFormation+
-            "&token="+token);
+            URL url = new URL("http://"+ip+"/webService_Android/rechercher_formation_a_valider.php?token="+token);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -56,12 +53,12 @@ public class RechercherEvaluation extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute (String string) {
+    protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        callback.afficherInfoEvaluation(string);
+        callback.afficherFormationAValider(string);
     }
 
-    public interface IRechercheEvaluationParIdFormation{
-        void afficherInfoEvaluation(String string);
+    public interface IRechercheFormationAValider{
+        void afficherFormationAValider(String string);
     }
 }

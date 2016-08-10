@@ -35,22 +35,13 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
     EditText nom, dateDebut, dateFin, description;
     EditText etablissement, rue, codePostal, localite;
     EditText telephone, email, siteInternet;
-
     JSONObject jsonObject;
-
     String text1,text2, text3, text4;
     String text5, text6, text7, text8, text9, text10, text11;
-
     String idFormation, idCentreFormation, message, token;
-
     int idUtilisateur;
-
     Intent intent;
-
     SharedPreferences preferences;
-    //UtilisateurDAO utilisateurDAO;
-    //Utilisateur utilisateur;
-
     IPAddress ipAddress;
 
     @Override
@@ -78,13 +69,6 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         idUtilisateur = preferences.getInt("id", 0);
-
-        /*utilisateurDAO = new UtilisateurDAO(this);
-        utilisateur = new Utilisateur();
-        utilisateurDAO.openReadable();
-        utilisateur = utilisateurDAO.getUtilisateurById(idUtilisateur);
-        utilisateurDAO.close();
-        token = utilisateur.getSel();*/
         token = preferences.getString("token", "");
 
         ipAddress = new IPAddress();
