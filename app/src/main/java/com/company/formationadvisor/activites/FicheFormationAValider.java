@@ -1,16 +1,26 @@
 package com.company.formationadvisor.activites;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
 import com.company.formationadvisor.modeles.IPAddress;
+import com.company.formationadvisor.taches_asynchrones.EnvoyerMessage;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherUtilisateurParId;
@@ -19,18 +29,22 @@ import com.company.formationadvisor.taches_asynchrones.ValidationFormation;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.IDN;
+
 public class FicheFormationAValider extends AppCompatActivity implements RechercherParIdFormation.IRechercheParIdFormation,
         RechercherParIdCentreFormation.IRechercheParIdCentreFormation,
         RechercherUtilisateurParId.IRecchercheUtilisateurParId,
-        ValidationFormation.IValiderFormation {
+        ValidationFormation.IValiderFormation,
+        EnvoyerMessage.IEnvoiNouveauMessage {
 
     TextView auteur, nom, dateDebut, dateFin, description;
     TextView etablissement, rue, codePostal, localite, telephone, email, siteInternet;
     String text1,text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12;
-    String idFormation, idCentreFormation, idUtilisateur, token;
+    String idFormation, idCentreFormation, idUtilisateur, token, pseudoExpediteurMessage;
     Intent intent;
     SharedPreferences preferences;
     IPAddress ipAddress;
+    EditText titreMessage, texteMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +64,13 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         email = (TextView) findViewById(R.id.email_centre_formation);
         siteInternet = (TextView) findViewById(R.id.site_internet_centre_formation);
 
+        titreMessage = (EditText) findViewById(R.id.titre_message);
+        texteMessage = (EditText) findViewById(R.id.texte_message);
+
         ipAddress = new IPAddress();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         token = preferences.getString("token", "");
+        pseudoExpediteurMessage = preferences.getString("pseudo", "");
 
         Bundle extra = this.getIntent().getExtras();
         if (extra != null) {
@@ -128,12 +146,18 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
 
     }
 
-    public void contacterAuteurAnnonce(View view) {
-    }
-
     public void approuverAnnonceFormation(View view) {
+        String titreMessage = "Validation de votre annonce";
+        String texteMessage = "Votre annonce a été validée.";
         ValidationFormation tache4 = new ValidationFormation(this, ipAddress);
         tache4.execute(idFormation, token);
+        EnvoyerMessage tache5 = new EnvoyerMessage(this, ipAddress);
+        tache5.execute(titreMessage, texteMessage, pseudoExpediteurMessage, text12, token);
+    }
+
+    public void contacterAuteurAnnonce(View view) {
+        EnvoyerMessage tache6 = new EnvoyerMessage(this, ipAddress);
+        tache6.execute(titreMessage.getText().toString(), texteMessage.getText().toString(), pseudoExpediteurMessage, text12, token);
     }
 
     @Override
@@ -148,6 +172,47 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
                 Toast.makeText(this, "Echec de la validation", Toast.LENGTH_SHORT).show();
             }
 
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tableau_de_bord:
+                intent = new Intent(this, TableauDeBord.class);
+                startActivity(intent);
+                return true;
+            case R.id.deconnexion:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void afficherConfirmationEnvoiNouveauMessage(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            String message = jsonObject.getString("success");
+
+            if (message.equals("true")) {
+                Toast.makeText(this, "Votre message a bien été envoyé.", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(this, "L'envoi de votre message a échoué.", Toast.LENGTH_SHORT).show();
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

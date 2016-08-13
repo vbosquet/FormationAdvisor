@@ -128,7 +128,7 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
 
             }
         });
-        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         //latitude.setText(String.valueOf(location.getLatitude()));
         //longitude.setText(String.valueOf(location.getLongitude()));

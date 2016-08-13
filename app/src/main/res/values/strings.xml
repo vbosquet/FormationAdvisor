@@ -42,5 +42,8 @@
     <string name="auteur_annonce_formation">Auteur de l\'annonce : </string>
     <string name="bouton_approuver">VALIDER</string>
     <string name="bouton_contacter">CONTACTER</string>
+    <string name="text_view_contacter_auteur_annonce">Conctater l\'auteur de l\'annonce : </string>
+    <string name="titre_message">Titre</string>
+    <string name="texte_message">Message</string>
 
 </resources>

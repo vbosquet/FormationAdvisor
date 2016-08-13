@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,16 +13,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.Evaluation;
 import com.company.formationadvisor.modeles.EvaluationAdaptater;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
 import com.company.formationadvisor.taches_asynchrones.RechercherEvaluation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdFormation;
-import com.company.formationadvisor.taches_asynchrones.RechercherUtilisateurParId;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

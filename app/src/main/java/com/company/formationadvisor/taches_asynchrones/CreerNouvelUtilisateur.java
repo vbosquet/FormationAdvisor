@@ -57,10 +57,6 @@ public class CreerNouvelUtilisateur extends AsyncTask<String, String, String>{
 
             return stringBuilder.toString();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

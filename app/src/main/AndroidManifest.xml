@@ -44,6 +44,15 @@
         <activity android:name=".activites.RecherchePosition" />
         <activity android:name=".activites.FicheCentreFormation" />
         <activity android:name=".activites.ApprouverFormation" />
-        <activity android:name=".activites.FicheFormationAValider"/>
+        <activity android:name=".activites.FicheFormationAValider" />
+
+        <service android:name=".services.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".activites.BoiteReceptionMessage"></activity>
     </application>
+
 </manifest>

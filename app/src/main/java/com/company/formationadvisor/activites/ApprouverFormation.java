@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +29,7 @@ public class ApprouverFormation extends AppCompatActivity implements RechercherF
     IPAddress ipAddress;
     String token;
     ArrayList listeLibelleFormation, listeIdFormation, listeIdCentreFormation, listeIdUtilisateur;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +78,7 @@ public class ApprouverFormation extends AppCompatActivity implements RechercherF
                     for (int i = 0; i<listeLibelleFormation.size(); i++){
 
                         if (action.equals(listeLibelleFormation.get(i))) {
-                            Intent intent = new Intent(getApplicationContext(), FicheFormationAValider.class);
+                            intent = new Intent(getApplicationContext(), FicheFormationAValider.class);
                             intent.putExtra("idFormation", String.valueOf(listeIdFormation.get(i)));
                             intent.putExtra("idCentreFormation", String.valueOf(listeIdCentreFormation.get(i)));
                             intent.putExtra("idUtilisateur", String.valueOf(listeIdUtilisateur.get(i)));
@@ -87,7 +91,28 @@ public class ApprouverFormation extends AppCompatActivity implements RechercherF
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tableau_de_bord:
+                intent = new Intent(this, TableauDeBord.class);
+                startActivity(intent);
+                return true;
+            case R.id.deconnexion:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
