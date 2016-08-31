@@ -2,32 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/titre_message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/texte_message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/border_messagerie">
 
     <TextView
         android:id="@+id/expediteur_message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="352dp"
+        android:layout_height="match_parent"
+        android:textColor="#3c3c3c"/>
+
 
     <TextView
-        android:id="@+id/date_envoi_messsage"
-        android:layout_width="match_parent"
+        android:id="@+id/texte_message"
+        android:layout_width="352dp"
         android:layout_height="match_parent" />
 
-    <Button
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_action_delete"
+        android:onClick="supprimerMessage"
+        android:layout_gravity="right" />
+
+    <!--<TextView
+        android:id="@+id/date_envoi_messsage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />-->
+
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bouton_supprimer_formation"
-        android:onClick="supprimerMessage"/>
+        android:onClick="supprimerMessage"/>-->
 
 </LinearLayout>

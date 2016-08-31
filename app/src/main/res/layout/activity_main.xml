@@ -8,19 +8,29 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.company.formationadvisor.activites.MainActivity"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/inscription"
-        android:layout_width="wrap_content"
+        android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:text="@string/bouton_inscription"
-        android:onClick="inscription"/>
+        android:text="@string/bouton_accueil_nouveau_membre"
+        android:onClick="inscription"
+        android:layout_marginBottom="5dp"/>
 
     <Button
         android:id="@+id/connexion"
-        android:layout_width="wrap_content"
+        android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:text="@string/bouton_connexion"
-        android:onClick="connexion"/>
+        android:text="@string/bouton_accueil_ancien_membre"
+        android:onClick="connexion" />
+
+    <TextView
+        android:layout_width="352dp"
+        android:layout_height="wrap_content"
+        android:text="@string/description_application"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textAlignment="center"/>
+
 </LinearLayout>

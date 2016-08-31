@@ -3,13 +3,15 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,7 +35,7 @@ public class BoiteReceptionMessage extends AppCompatActivity implements Recherch
     String pseudo, token, titreMessage, texteMessage, expediteurMessage, dateEnvoiMessage;
     IPAddress ipAddress;
     ArrayList<Message> listeMessage;
-    ArrayList listeTitre, listeTexte, listeExpediteur, listeDateEnvoi;
+    ArrayList listeIdMessage, listeTexte, listeExpediteur, listeDateEnvoi;
     Message message;
     ListView listView;
     Intent intent;
@@ -41,7 +43,12 @@ public class BoiteReceptionMessage extends AppCompatActivity implements Recherch
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_boite_reception_message);
+        setContentView(R.layout.activity_boite_reception_message1);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         ipAddress = new IPAddress();
 
@@ -54,39 +61,46 @@ public class BoiteReceptionMessage extends AppCompatActivity implements Recherch
     }
 
     @Override
-    public void afficherResultatRecherche(String string) {
+    public void afficherResultatRechercheMessage(String string) {
+
         try {
             JSONObject jsonObject = new JSONObject(string);
             JSONArray jsonArray = jsonObject.getJSONArray("liste_message");
 
-            listeTitre = new ArrayList();
-            listeTexte = new ArrayList();
-            listeExpediteur = new ArrayList();
-            listeDateEnvoi = new ArrayList();
-            listeMessage = new ArrayList<>();
+            if (jsonArray.length() > 0) {
 
-            for(int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonData = jsonArray.getJSONObject(i);
-                listeTitre.add(jsonData.getString("titre"));
-                listeTexte.add(jsonData.getString("texte"));
-                listeExpediteur.add(jsonData.getString("expediteur"));
-                listeDateEnvoi.add(jsonData.getString("date_envoi"));
+                setContentView(R.layout.activity_boite_reception_message2);
+
+                listeIdMessage = new ArrayList();
+                listeTexte = new ArrayList();
+                listeExpediteur = new ArrayList();
+                listeDateEnvoi = new ArrayList();
+                listeMessage = new ArrayList<>();
+
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonData = jsonArray.getJSONObject(i);
+
+                    listeIdMessage.add(jsonData.getString("id_message"));
+                    listeTexte.add(jsonData.getString("texte"));
+                    listeExpediteur.add(jsonData.getString("expediteur"));
+                    listeDateEnvoi.add(jsonData.getString("date_envoi"));
+                }
+
+                for(int i = 0; i<listeTexte.size(); i++) {
+
+                    texteMessage = (String) listeTexte.get(i);
+                    expediteurMessage = (String) listeExpediteur.get(i);
+                    dateEnvoiMessage = (String) listeDateEnvoi.get(i);
+
+                    message = new Message(texteMessage, expediteurMessage, dateEnvoiMessage);
+                    listeMessage.add(message);
+                }
+
+                listView = (ListView) findViewById(R.id.liste_message);
+                MessageAdapater messageAdapater = new MessageAdapater(this, listeMessage);
+                listView.setAdapter(messageAdapater);
+
             }
-
-            for(int i = 0; i<listeTitre.size(); i++) {
-
-                titreMessage = (String) listeTitre.get(i);
-                texteMessage = (String) listeTexte.get(i);
-                expediteurMessage = (String) listeExpediteur.get(i);
-                dateEnvoiMessage = (String) listeDateEnvoi.get(i);
-
-                message = new Message(titreMessage, texteMessage, expediteurMessage, dateEnvoiMessage);
-                listeMessage.add(message);
-            }
-
-            listView = (ListView) findViewById(R.id.liste_message);
-            MessageAdapater messageAdapater = new MessageAdapater(this, listeMessage);
-            listView.setAdapter(messageAdapater);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -120,22 +134,10 @@ public class BoiteReceptionMessage extends AppCompatActivity implements Recherch
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

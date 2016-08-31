@@ -3,6 +3,8 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +43,11 @@ public class MaListeDeFormations extends AppCompatActivity implements Rechercher
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ma_liste_de_formations);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         idUtilisateur = preferences.getInt("id", 0);
@@ -111,13 +118,20 @@ public class MaListeDeFormations extends AppCompatActivity implements Rechercher
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
+            /*case R.id.tableau_de_bord:
                 intent = new Intent(this, TableauDeBord.class);
                 startActivity(intent);
                 return true;
             case R.id.deconnexion:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                return true;*/
+            case  R.id.nouveau:
+                intent = new Intent(this, NouveauCentreFormation.class);
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

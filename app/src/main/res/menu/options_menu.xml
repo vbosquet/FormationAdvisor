@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/options_menu">
 
-    <item android:id="@+id/tableau_de_bord"
+    <item
+        android:id="@+id/nouveau"
+        android:title="@string/activity_nouvelle_formation"
+        android:icon="@drawable/ic_action_new_light"
+        app:showAsAction="ifRoom" />
+
+    <!--<item android:id="@+id/tableau_de_bord"
         android:title="@string/option_menu_tableau_de_bord"/>
 
     <item android:id="@+id/deconnexion"
-        android:title="@string/option_menu_deconnexion"/>
-
+        android:title="@string/option_menu_deconnexion"/>-->
 </menu>

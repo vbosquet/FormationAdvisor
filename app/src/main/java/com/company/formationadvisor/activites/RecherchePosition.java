@@ -78,8 +78,6 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
             listProviders.add(locationManager.getProvider(name));
         }
 
-        Log.i("PROVIDERS", listProviders.toString());
-
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
         criteria.setSpeedAccuracy(Criteria.ACCURACY_COARSE);
@@ -89,8 +87,6 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
         criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
         criteria.setSpeedRequired(true);
 
-        String nameProvider = locationManager.getBestProvider(criteria, true);
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
@@ -99,7 +95,7 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 150, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i("LOG", location.toString());
+
                 maLatitude = location.getLatitude();
                 maLongitude = location.getLongitude();
 
@@ -154,24 +150,24 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
         return p1;
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
+            /*case R.id.tableau_de_bord:
                 intent = new Intent(this, TableauDeBord.class);
                 startActivity(intent);
                 return true;
             case R.id.deconnexion:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }

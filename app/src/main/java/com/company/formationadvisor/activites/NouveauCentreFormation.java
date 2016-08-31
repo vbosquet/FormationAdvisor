@@ -3,6 +3,8 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,26 +26,23 @@ import org.json.JSONObject;
 
 public class NouveauCentreFormation extends AppCompatActivity implements CreerNouveauCentreFormation.ICreationCentreFormation {
 
-    EditText etablissement, rue, codePostal, localite;
-    EditText telephone, email, siteInternet;
-
+    EditText etablissement, rue, codePostal, localite, telephone, email, siteInternet;
     JSONObject jsonObject;
     String idCentreFormation, token;
-
     Intent intent;
-
-    //UtilisateurDAO utilisateurDAO;
-    //Utilisateur utilisateur;
-
     SharedPreferences preferences;
     int idUtilisateur;
-
     IPAddress ipAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nouveau_centre_formation);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         etablissement = (EditText) findViewById(R.id.nom_centre_formation);
         rue = (EditText) findViewById(R.id.adresse_centre_formation);
@@ -52,8 +51,6 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
         telephone = (EditText) findViewById(R.id.telephone_centre_formation);
         email = (EditText) findViewById(R.id.email_centre_formation);
         siteInternet = (EditText) findViewById(R.id.site_internet_centre_formation);
-
-        //utilisateurDAO = new UtilisateurDAO(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         idUtilisateur = preferences.getInt("id", 0);
@@ -72,11 +69,6 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
                 siteInternet.getText().toString().equals("")){
             Toast.makeText(this, "Vous devez remplir tous les champs.", Toast.LENGTH_SHORT).show();
         } else {
-            /*utilisateurDAO.openReadable();
-            utilisateur = new Utilisateur();
-            utilisateur = utilisateurDAO.getUtilisateurById(idUtilisateur);
-            token = utilisateur.getSel();
-            utilisateurDAO.close();*/
             token = preferences.getString("token", "");
 
             CreerNouveauCentreFormation tache = new CreerNouveauCentreFormation(this, ipAddress);
@@ -96,23 +88,26 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
         startActivity(intent);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
+            /*case R.id.tableau_de_bord:
                 intent = new Intent(this, TableauDeBord.class);
                 startActivity(intent);
                 return true;
             case R.id.deconnexion:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                return true;*/
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

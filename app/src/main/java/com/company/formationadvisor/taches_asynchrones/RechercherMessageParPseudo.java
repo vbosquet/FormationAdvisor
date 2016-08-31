@@ -60,10 +60,10 @@ public class RechercherMessageParPseudo extends AsyncTask<String, String, String
     @Override
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        callback.afficherResultatRecherche(string);
+        callback.afficherResultatRechercheMessage(string);
     }
 
     public interface IRechercheMessageParPseudo {
-        void afficherResultatRecherche(String string);
+        void afficherResultatRechercheMessage(String string);
     }
 }

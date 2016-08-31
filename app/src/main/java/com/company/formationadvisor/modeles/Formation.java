@@ -8,8 +8,6 @@ public class Formation {
     private String dateFin;
     private String description;
 
-    public Formation() {}
-
     public Formation(String nom, String dateDebut, String dateFin, String description ) {
         this.nom = nom;
         this.dateDebut = dateDebut;

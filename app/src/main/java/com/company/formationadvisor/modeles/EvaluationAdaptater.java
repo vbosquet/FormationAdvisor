@@ -37,7 +37,7 @@ public class EvaluationAdaptater extends ArrayAdapter<Evaluation> {
 
         viewHolder.titre.setText(evaluation.getTitre());
         viewHolder.commentaire.setText(evaluation.getCommentaire());
-        viewHolder.auteur.setText(evaluation.getAuteur());
+        viewHolder.auteur.setText(evaluation.getAuteur() + " a écrit :");
 
         return convertView;
     }

@@ -7,9 +7,8 @@ public class Message {
     private String expediteur;
     private String dateEnvoi;
 
-    public Message(String titre, String texte, String expediteur, String dateEnvoi) {
+    public Message(String texte, String expediteur, String dateEnvoi) {
         this.texte = texte;
-        this.titre = titre;
         this.expediteur = expediteur;
         this.dateEnvoi = dateEnvoi;
     }

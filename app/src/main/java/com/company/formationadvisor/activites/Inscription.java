@@ -1,9 +1,12 @@
 package com.company.formationadvisor.activites;
 
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,6 +46,9 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         nom = (EditText) findViewById(R.id.nom_utilisateur);
         prenom = (EditText) findViewById(R.id.prenom_utilisateur);
         pseudo = (EditText) findViewById(R.id.pseudo_utilisateur);
@@ -51,6 +57,16 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
 
         ipAddress = new IPAddress();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

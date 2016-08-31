@@ -178,24 +178,24 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
+            /*case R.id.tableau_de_bord:
                 intent = new Intent(this, TableauDeBord.class);
                 startActivity(intent);
                 return true;
             case R.id.deconnexion:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }

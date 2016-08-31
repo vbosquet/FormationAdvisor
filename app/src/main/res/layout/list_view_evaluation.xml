@@ -2,7 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/border_messagerie">
+
+
+    <TextView
+        android:id="@+id/auteur_evaluation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#3c3c3c"
+        android:layout_marginBottom="7dp"/>
     
     <TextView
         android:id="@+id/titre_evaluation"
@@ -11,11 +24,6 @@
 
     <TextView
         android:id="@+id/commentaire_evaluation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView
-        android:id="@+id/auteur_evaluation"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

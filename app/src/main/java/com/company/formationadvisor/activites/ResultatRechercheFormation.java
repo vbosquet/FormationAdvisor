@@ -1,8 +1,12 @@
 package com.company.formationadvisor.activites;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
@@ -40,13 +45,19 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultat_recherche_formation);
 
-        Bundle extra = this.getIntent().getExtras();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        /*Bundle extra = this.getIntent().getExtras();
         if(extra != null) {
             motCle = extra.getString("motCle");
-        }
+        }*/
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         token = preferences.getString("token", "");
+        motCle = preferences.getString("motCle", "");
 
         ipAddress = new IPAddress();
 
@@ -92,9 +103,16 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                         for (int i = 0; i<listeLibelleFormation.size(); i++){
 
                             if (action.equals(listeLibelleFormation.get(i))) {
-                                Intent intent = new Intent(getApplicationContext(), FicheFormation.class);
-                                intent.putExtra("idFormation", String.valueOf(listeIdFormation.get(i)));
-                                intent.putExtra("idCentreFormation", String.valueOf(listeIdCentreFormation.get(i)));
+
+                                preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("idFormation", String.valueOf(listeIdFormation.get(i)));
+                                editor.putString("idCentreFormation", String.valueOf(listeIdCentreFormation.get(i)));
+                                editor.apply();
+
+                                intent = new Intent(getApplicationContext(), FicheFormation.class);
+                                //intent.putExtra("idFormation", String.valueOf(listeIdFormation.get(i)));
+                                //intent.putExtra("idCentreFormation", String.valueOf(listeIdCentreFormation.get(i)));
                                 startActivity(intent);
                             }
                         }
@@ -109,22 +127,10 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

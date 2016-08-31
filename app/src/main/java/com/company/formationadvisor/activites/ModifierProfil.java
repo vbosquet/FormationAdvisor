@@ -3,6 +3,8 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +44,11 @@ public class ModifierProfil extends AppCompatActivity implements RechercherUtili
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modifier_profil);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         pseudo = preferences.getString("pseudo", "");
         token = preferences.getString("token", "");
@@ -60,23 +67,26 @@ public class ModifierProfil extends AppCompatActivity implements RechercherUtili
                 text3.getText().toString(), pseudo, token);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
+            /*case R.id.tableau_de_bord:
                 intent = new Intent(this, TableauDeBord.class);
                 startActivity(intent);
                 return true;
             case R.id.deconnexion:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                return true;*/
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -93,13 +103,19 @@ public class ModifierProfil extends AppCompatActivity implements RechercherUtili
         String emailUtilisateur = infosUtilisateur.getString("email");
 
         text1 = (EditText) findViewById(R.id.nom_utilisateur);
-        text1.setText(nomUtilisateur);
+        if (text1 != null) {
+            text1.setText(nomUtilisateur);
+        }
 
         text2 = (EditText) findViewById(R.id.prenom_utilisateur);
-        text2.setText(prenomUtilisateur);
+        if (text2 != null) {
+            text2.setText(prenomUtilisateur);
+        }
 
         text3 = (EditText) findViewById(R.id.email_utilisateur);
-        text3.setText(emailUtilisateur);
+        if (text3 != null) {
+            text3.setText(emailUtilisateur);
+        }
     }
 
     @Override

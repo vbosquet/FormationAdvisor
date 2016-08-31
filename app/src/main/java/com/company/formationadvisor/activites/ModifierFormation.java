@@ -3,6 +3,8 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +51,11 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modifier_formation);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         nom = (EditText) findViewById(R.id.nom_formation);
         dateDebut = (EditText) findViewById(R.id.date_debut_formation);
         dateFin = (EditText) findViewById(R.id.date_fin_formation);
@@ -79,7 +86,7 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
         tache2.execute(idCentreFormation, token);
     }
 
-    public void modifierFormation(View view) {
+    public void modifierFormation() {
         ModificationFormation tache1 = new ModificationFormation(this, ipAddress);
         tache1.execute(nom.getText().toString(), description.getText().toString(),
                 dateDebut.getText().toString(), dateFin.getText().toString(), idFormation, token);
@@ -91,7 +98,7 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
                 localite.getText().toString(), token);
     }
 
-    public void supprimerFormation(View view) {
+    public void supprimerFormation() {
         SuppressionFormationParIdFormation tache = new SuppressionFormationParIdFormation(this, ipAddress);
         tache.execute(idFormation, token);
     }
@@ -172,7 +179,7 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
 
             if (message.equals("true")) {
                 Toast.makeText(this, "Modification réussie", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, MaListeDeFormations.class);
+                intent = new Intent(this, ModifierFormation.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Echec des modifications", Toast.LENGTH_SHORT).show();
@@ -207,20 +214,21 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.formation_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
+            case R.id.editer_formation:
+                modifierFormation();
                 return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+            case R.id.supprimer_formation:
+                supprimerFormation();
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

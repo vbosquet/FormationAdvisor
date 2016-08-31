@@ -8,32 +8,86 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.company.formationadvisor.activites.AjouterEvaluation"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#e2e1e1">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/titre_evaluation"/>
-
-    <EditText
-        android:id="@+id/titre_evaluation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:text="Que pensez-vous de cette formation ?"
+        android:gravity="center"
+        android:textSize="17sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/commentaire_evaluation"/>
+        android:text="Aidez les autres utilisateurs à choisir leur formation"
+        android:gravity="center"
+        android:layout_marginBottom="15dp" />
 
-    <EditText
-        android:id="@+id/commentaire_evaluation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/bouton_enregistrer"
-        android:onClick="enregistrerNouvelleEvaluation"/>
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/border">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/titre_evaluation"
+            android:textColor="#3c3c3c"/>
+
+        <EditText
+            android:id="@+id/titre_evaluation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_profil"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:textColor="#b1b0b0"
+            android:hint="Votre titre"
+            android:textColorHint="#b1b0b0"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/commentaire_evaluation"
+            android:textColor="#3c3c3c"/>
+
+        <EditText
+            android:id="@+id/commentaire_evaluation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_profil"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:textColor="#b1b0b0"
+            android:inputType="textMultiLine"
+            android:gravity="top|left"
+            android:lines="8"
+            android:maxLines="10"
+            android:hint="Ecrivez ici ce que vous pensez de la formation (contenu des cours, compétence des professeurs, accueil, etc)"
+            android:textColorHint="#b1b0b0"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bouton_publier_evaluation"
+            android:onClick="enregistrerNouvelleEvaluation"
+            android:background="#9ac5e4"/>
+
+    </LinearLayout>
 
 </LinearLayout>

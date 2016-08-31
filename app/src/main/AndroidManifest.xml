@@ -5,6 +5,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
 
     <application
         android:allowBackup="true"
@@ -19,8 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.Inscription" />
-        <activity android:name=".activites.Connexion" />
+        <activity
+            android:name=".activites.Inscription"
+            android:label="@string/activity_inscription"
+            android:parentActivityName=".activites.MainActivity" />
+        <activity
+            android:name=".activites.Connexion"
+            android:label="@string/activity_connexion"
+            android:parentActivityName=".activites.MainActivity" />
         <activity android:name=".activites.TableauDeBord">
             <meta-data
                 android:name="android.app.searchable"
@@ -30,17 +43,43 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.ModifierProfil" />
+        <activity
+            android:name=".activites.ModifierProfil"
+            android:label="@string/activity_modifier_profil"
+            android:parentActivityName=".activites.TableauDeBord" />
         <activity android:name=".activites.Parametres" />
-        <activity android:name=".activites.ModifierMotDePasse" />
+        <activity
+            android:name=".activites.ModifierMotDePasse"
+            android:label="@string/activity_modifier_mot_de_passe"
+            android:parentActivityName=".activites.TableauDeBord" />
         <activity android:name=".activites.SupprimerCompte" />
-        <activity android:name=".activites.NouvelleFormation" />
-        <activity android:name=".activites.ModifierFormation" />
-        <activity android:name=".activites.MaListeDeFormations" />
-        <activity android:name=".activites.NouveauCentreFormation" />
-        <activity android:name=".activites.ResultatRechercheFormation" />
-        <activity android:name=".activites.FicheFormation" />
-        <activity android:name=".activites.AjouterEvaluation" />
+        <activity
+            android:name=".activites.NouvelleFormation"
+            android:label="@string/activity_nouvelle_formation"
+            android:parentActivityName=".activites.NouveauCentreFormation" />
+        <activity
+            android:name=".activites.ModifierFormation"
+            android:label="@string/activity_modifier_formation"
+            android:parentActivityName=".activites.MaListeDeFormations" />
+        <activity
+            android:name=".activites.MaListeDeFormations"
+            android:label="@string/activity_mes_formations"
+            android:parentActivityName=".activites.TableauDeBord" />
+        <activity
+            android:name=".activites.NouveauCentreFormation"
+            android:label="@string/activity_nouveau_centre_formation"
+            android:parentActivityName=".activites.TableauDeBord" />
+        <activity android:name=".activites.ResultatRechercheFormation"
+            android:label="@string/activity_resultat_recherche"
+            android:parentActivityName=".activites.TableauDeBord"/>
+        <activity
+            android:name=".activites.FicheFormation"
+            android:label="@string/activity_fiche_formation"
+            android:parentActivityName=".activites.ResultatRechercheFormation" />
+        <activity
+            android:name=".activites.AjouterEvaluation"
+            android:label="@string/activity_ajouter_evaluation"
+            android:parentActivityName=".activites.Commentaires" />
         <activity android:name=".activites.RecherchePosition" />
         <activity android:name=".activites.FicheCentreFormation" />
         <activity android:name=".activites.ApprouverFormation" />
@@ -52,7 +91,22 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".activites.BoiteReceptionMessage"></activity>
+        <activity
+            android:name=".activites.BoiteReceptionMessage"
+            android:label="@string/activity_boite_reception_message"
+            android:parentActivityName=".activites.TableauDeBord" />
+        <activity android:name=".activites.InfosCentreFormation"
+            android:label="@string/activity_infos_organisme"
+            android:parentActivityName=".activites.FicheFormation"/>
+        <activity android:name=".activites.Commentaires"
+            android:label="@string/activity_commentaires"
+            android:parentActivityName=".activites.FicheFormation" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB_S1MQT_9QhbNf3mt6iuosXtyOpVV8sU8"/>
     </application>
 
 </manifest>

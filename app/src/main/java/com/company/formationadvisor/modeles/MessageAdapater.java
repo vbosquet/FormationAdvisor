@@ -26,25 +26,23 @@ public class MessageAdapater extends ArrayAdapter<Message> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_view_message, parent, false);
-            viewHolder.titre = (TextView) convertView.findViewById(R.id.titre_message);
             viewHolder.texte = (TextView) convertView.findViewById(R.id.texte_message);
             viewHolder.expediteur = (TextView) convertView.findViewById(R.id.expediteur_message);
-            viewHolder.dateEnvoi = (TextView) convertView.findViewById(R.id.date_envoi_messsage);
+            //viewHolder.dateEnvoi = (TextView) convertView.findViewById(R.id.date_envoi_messsage);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.titre.setText(message.getTitre());
         viewHolder.texte.setText(message.getTexte());
-        viewHolder.expediteur.setText(message.getExpediteur());
-        viewHolder.dateEnvoi.setText(message.getDateEnvoi());
+        viewHolder.expediteur.setText("Le " + message
+                .getDateEnvoi() + ", " + message.getExpediteur() + " vous a écrit : ");
+        //viewHolder.dateEnvoi.setText(message.getDateEnvoi());
 
         return  convertView;
     }
 
     public static class ViewHolder {
-        TextView titre;
         TextView texte;
         TextView expediteur;
         TextView dateEnvoi;

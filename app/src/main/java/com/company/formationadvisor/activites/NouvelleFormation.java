@@ -3,6 +3,8 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +39,11 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nouvelle_formation);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         nomFormation = (EditText) findViewById(R.id.nom_formation);
         dateDebut = (EditText) findViewById(R.id.date_debut_formation);
         dateFin = (EditText) findViewById(R.id.date_fin_formation);
@@ -57,7 +64,7 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
 
             if(message.equals("true")) {
                 Toast.makeText(this, "Enregistrement réussi", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, TableauDeBord.class);
+                intent = new Intent(this, MaListeDeFormations.class);
                 startActivity(intent);
 
             } else if(message.equals("exist")) {
@@ -80,8 +87,6 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
             idCentreFormation = extra.getString("id_centre_formation");
         }
 
-        Log.i("ID_CENTRE", idCentreFormation);
-
         if (nomFormation.getText().toString().equals("") ||
                 dateDebut.getText().toString().equals("") ||
                 dateFin.getText().toString().equals("") ||
@@ -95,23 +100,26 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.tableau_de_bord:
+            /*case R.id.tableau_de_bord:
                 intent = new Intent(this, TableauDeBord.class);
                 startActivity(intent);
                 return true;
             case R.id.deconnexion:
                 intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                return true;*/
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
