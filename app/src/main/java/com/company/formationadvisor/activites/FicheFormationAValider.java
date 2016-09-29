@@ -1,15 +1,16 @@
 package com.company.formationadvisor.activites;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,12 +21,15 @@ import android.widget.Toast;
 
 import com.company.formationadvisor.R;
 import com.company.formationadvisor.modeles.IPAddress;
+import com.company.formationadvisor.taches_asynchrones.AjouterLocationCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.EnvoyerMessage;
+import com.company.formationadvisor.taches_asynchrones.GetCoordinatesFromAddress;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherUtilisateurParId;
 import com.company.formationadvisor.taches_asynchrones.ValidationFormation;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,11 +39,13 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         RechercherParIdCentreFormation.IRechercheParIdCentreFormation,
         RechercherUtilisateurParId.IRecchercheUtilisateurParId,
         ValidationFormation.IValiderFormation,
-        EnvoyerMessage.IEnvoiNouveauMessage {
+        EnvoyerMessage.IEnvoiNouveauMessage,
+        GetCoordinatesFromAddress.IGetCoordinatesFromAddress,
+        AjouterLocationCentreFormation.IAjouterLocationCentreFormation{
 
-    TextView auteur, nom, dateDebut, dateFin, description;
+    TextView nomAuteur, prenomAuteur, nom, dateDebut, dateFin, description;
     TextView etablissement, rue, codePostal, localite, telephone, email, siteInternet;
-    String text1,text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12;
+    String text1,text2, text3, text4, text5, text6, text7, text8, text9, text10, text11, text12, text13, text14;
     String idFormation, idCentreFormation, idUtilisateur, token, pseudoExpediteurMessage;
     Intent intent;
     SharedPreferences preferences;
@@ -51,7 +57,13 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fiche_formation_avalider);
 
-        auteur = (TextView) findViewById(R.id.auteur_annonce_formation);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        nomAuteur = (TextView) findViewById(R.id.nom_auteur_annonce_formation);
+        prenomAuteur = (TextView) findViewById(R.id.prenom_auteur_annonce_formation);
         nom = (TextView) findViewById(R.id.nom_formation);
         dateDebut = (TextView) findViewById(R.id.date_debut_formation);
         dateFin = (TextView) findViewById(R.id.date_fin_formation);
@@ -63,9 +75,6 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         telephone = (TextView) findViewById(R.id.telephone_centre_formation);
         email = (TextView) findViewById(R.id.email_centre_formation);
         siteInternet = (TextView) findViewById(R.id.site_internet_centre_formation);
-
-        titreMessage = (EditText) findViewById(R.id.titre_message);
-        texteMessage = (EditText) findViewById(R.id.texte_message);
 
         ipAddress = new IPAddress();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -79,12 +88,13 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
             idUtilisateur = extra.getString("idUtilisateur");
         }
 
-        RechercherParIdFormation tache1 = new RechercherParIdFormation(this, ipAddress);
-        RechercherParIdCentreFormation tache2 = new RechercherParIdCentreFormation(this, ipAddress);
-        RechercherUtilisateurParId tache3 = new RechercherUtilisateurParId(this, ipAddress);
-        tache1.execute(idFormation, token);
-        tache2.execute(idCentreFormation, token);
-        tache3.execute(idUtilisateur, token);
+        RechercherParIdFormation rechercherParIdFormation = new RechercherParIdFormation(this, ipAddress);
+        RechercherParIdCentreFormation rechercherParIdCentreFormation = new RechercherParIdCentreFormation(this, ipAddress);
+        RechercherUtilisateurParId rechercherUtilisateurParId = new RechercherUtilisateurParId(this, ipAddress);
+
+        rechercherParIdFormation.execute(idFormation, token);
+        rechercherParIdCentreFormation.execute(idCentreFormation, token);
+        rechercherUtilisateurParId.execute(idUtilisateur, token);
     }
 
     @Override
@@ -138,7 +148,11 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         try {
             JSONObject jsonObject = new JSONObject(string);
             text12 = jsonObject.getString("username");
-            auteur.setText(text12);
+            text13 = jsonObject.getString("nom");
+            text14 = jsonObject.getString("prenom");
+
+            nomAuteur.setText(text13);
+            prenomAuteur.setText(text14);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -146,18 +160,51 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
 
     }
 
-    public void approuverAnnonceFormation(View view) {
+    public void approuverAnnonceFormation() {
         String titreMessage = "Validation de votre annonce";
         String texteMessage = "Votre annonce a été validée.";
-        ValidationFormation tache4 = new ValidationFormation(this, ipAddress);
-        tache4.execute(idFormation, token);
-        EnvoyerMessage tache5 = new EnvoyerMessage(this, ipAddress);
-        tache5.execute(titreMessage, texteMessage, pseudoExpediteurMessage, text12, token);
+
+        ValidationFormation validationFormation = new ValidationFormation(this, ipAddress);
+        validationFormation.execute(idFormation, token);
+
+        EnvoyerMessage envoyerMessage = new EnvoyerMessage(this, ipAddress);
+        envoyerMessage.execute(titreMessage, texteMessage, pseudoExpediteurMessage, text12, token);
+
+        String adresseComplete = text6 + ", " + text7 + " " + text8;
+        GetCoordinatesFromAddress getCoordinatesFromAddress = new GetCoordinatesFromAddress(this);
+        getCoordinatesFromAddress.execute(adresseComplete);
     }
 
-    public void contacterAuteurAnnonce(View view) {
-        EnvoyerMessage tache6 = new EnvoyerMessage(this, ipAddress);
-        tache6.execute(titreMessage.getText().toString(), texteMessage.getText().toString(), pseudoExpediteurMessage, text12, token);
+    public void contacterAuteurAnnonce() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_contact, null);
+
+        titreMessage = (EditText) dialogView.findViewById(R.id.titre_message);
+        texteMessage = (EditText) dialogView.findViewById(R.id.texte_message);
+
+        builder.setTitle("Contacter l'auteur de l'annonce");
+        builder.setView(dialogView);
+        builder.setPositiveButton("Contacter", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EnvoyerMessage envoyerMessage = new EnvoyerMessage(FicheFormationAValider.this, ipAddress);
+                envoyerMessage.execute(titreMessage.getText().toString(), texteMessage.getText().toString(), pseudoExpediteurMessage, text12, token);
+            }
+        });
+
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
@@ -178,24 +225,25 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         }
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.formation_a_valider_menu, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
+            case R.id.contact:
+                contacterAuteurAnnonce();
                 return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
+            case R.id.check:
+                approuverAnnonceFormation();
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -217,5 +265,36 @@ public class FicheFormationAValider extends AppCompatActivity implements Recherc
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void getCoordinates(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            JSONArray jsonArray = jsonObject.getJSONArray("results");
+
+            for(int i = 0; i<jsonArray.length(); i++) {
+                JSONObject item = jsonArray.getJSONObject(i);
+                JSONObject geoJson = item.getJSONObject("geometry");
+                JSONObject locJson = geoJson.getJSONObject("location");
+                Double latitude = Double.parseDouble(locJson.getString("lat"));
+                Double longitude = Double.parseDouble(locJson.getString("lng"));
+
+                AjouterLocationCentreFormation ajouterLocationCentreFormation = new AjouterLocationCentreFormation(this, ipAddress);
+                ajouterLocationCentreFormation.execute(text5,
+                        String.valueOf(latitude),
+                        String.valueOf(longitude),
+                        idCentreFormation, token);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void confirmationEnregistrementLocation(String string) {
+        Log.i("LOCATION", string);
     }
 }

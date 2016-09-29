@@ -11,26 +11,28 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RechercherFormationParIdCentreFormation extends AsyncTask<String, String, String>{
+/**
+ * Created by Wivi on 27-09-16.
+ */
+public class SuppressionLocalite extends AsyncTask<String, String, String> {
 
-    private IRechercheFormationParIdCentreFormation callback;
+    private ISuppressionLocalite callback;
     private String ip;
 
-    public RechercherFormationParIdCentreFormation(IRechercheFormationParIdCentreFormation callback, IPAddress ipAddress) {
+    public SuppressionLocalite(ISuppressionLocalite callback, IPAddress ipAddress) {
         this.callback = callback;
         this.ip = ipAddress.getIpAddress();
     }
 
-
     @Override
     protected String doInBackground(String... params) {
-        String id = params[0];
+        String idCentreFormation = params[0];
         String token = params[1];
 
-        URL url;
         try {
-            url = new URL("http://"+ip+"/webService_Android/rechercher_formation_par_id_centre_formation.php?id="+id+
+            URL url = new URL("http://"+ip+"/webService_Android/supprimer_localite.php?id_centre_formation="+idCentreFormation+
                     "&token="+token);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -58,10 +60,10 @@ public class RechercherFormationParIdCentreFormation extends AsyncTask<String, S
 
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        callback.afficherInfoFormation(string);
+        callback.confirmerSuppresionLocalite(string);
     }
 
-    public interface IRechercheFormationParIdCentreFormation{
-        void afficherInfoFormation(String string);
+    public interface ISuppressionLocalite {
+        void confirmerSuppresionLocalite(String string);
     }
 }

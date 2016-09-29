@@ -7,6 +7,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ public class BoiteReceptionMessage extends AppCompatActivity implements Recherch
         SupprimerMessage.ISuppressionMessage {
 
     SharedPreferences preferences;
-    String pseudo, token, titreMessage, texteMessage, expediteurMessage, dateEnvoiMessage;
+    String pseudo, token, texteMessage, expediteurMessage, dateEnvoiMessage;
     IPAddress ipAddress;
     ArrayList<Message> listeMessage;
     ArrayList listeIdMessage, listeTexte, listeExpediteur, listeDateEnvoi;
@@ -109,8 +110,12 @@ public class BoiteReceptionMessage extends AppCompatActivity implements Recherch
     }
 
     public void supprimerMessage(View view) {
-        SupprimerMessage tache = new SupprimerMessage(this, ipAddress);
-        tache.execute(pseudo, token);
+
+        int position = listView.getPositionForView(view);
+        String idMessage = String.valueOf(listeIdMessage.get(position));
+
+        SupprimerMessage supprimerMessage = new SupprimerMessage(this, ipAddress);
+        supprimerMessage.execute(idMessage, token);
     }
 
     @Override

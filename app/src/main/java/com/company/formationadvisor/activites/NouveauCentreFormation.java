@@ -7,19 +7,19 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
+import com.company.formationadvisor.taches_asynchrones.AjouterLocationCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.CreerNouveauCentreFormation;
+import com.company.formationadvisor.taches_asynchrones.GetCoordinatesFromAddress;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +54,7 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         idUtilisateur = preferences.getInt("id", 0);
+        token = preferences.getString("token", "");
 
         ipAddress = new IPAddress();
     }
@@ -69,10 +70,8 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
                 siteInternet.getText().toString().equals("")){
             Toast.makeText(this, "Vous devez remplir tous les champs.", Toast.LENGTH_SHORT).show();
         } else {
-            token = preferences.getString("token", "");
-
-            CreerNouveauCentreFormation tache = new CreerNouveauCentreFormation(this, ipAddress);
-            tache.execute(etablissement.getText().toString(), rue.getText().toString(), codePostal.getText().toString(),
+            CreerNouveauCentreFormation creerNouveauCentreFormation = new CreerNouveauCentreFormation(this, ipAddress);
+            creerNouveauCentreFormation.execute(etablissement.getText().toString(), rue.getText().toString(), codePostal.getText().toString(),
                     localite.getText().toString(), telephone.getText().toString(), email.getText().toString(),
                     siteInternet.getText().toString(), token);
         }
@@ -88,24 +87,9 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
         startActivity(intent);
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;

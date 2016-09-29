@@ -12,12 +12,12 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_mail"
+        android:src="@mipmap/ic_email"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100dp"/>
 
     <TextView
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/message1_accueil_boite_message"
         android:textAlignment="center"
@@ -27,7 +27,7 @@
         android:textColor="#3c3c3c"/>
 
     <TextView
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/message2_accueil_boite_message"
         android:textAlignment="center"

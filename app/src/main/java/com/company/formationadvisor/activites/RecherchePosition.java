@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 import com.company.formationadvisor.R;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.LatLng;
+import com.company.formationadvisor.modeles.FormationCoordinates;
 import com.company.formationadvisor.taches_asynchrones.RechercherAdressesCentreFormation;
 
 import org.json.JSONArray;
@@ -46,7 +46,7 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
     TextView latitude, longitude;
     double maLatitude, maLongitude;
     String latitudeText, longitudeText, adresse;
-    LatLng locationAdresse;
+    FormationCoordinates locationAdresse;
 
     Intent intent;
 
@@ -131,10 +131,10 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
 
     }
 
-    public LatLng getLocationFromAddress (String address) throws IOException {
+    public FormationCoordinates getLocationFromAddress (String address) throws IOException {
         Geocoder geocoder = new Geocoder(this);
         List<Address> addresses;
-        LatLng p1;
+        FormationCoordinates p1;
         addresses = geocoder.getFromLocationName(address, 5);
 
         if (address == null) {
@@ -145,29 +145,14 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
         double lat = location.getLatitude();
         double lng = location.getLongitude();
 
-        p1 = new LatLng(lat, lng);
+        p1 = new FormationCoordinates(lat, lng);
 
         return p1;
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -204,7 +189,7 @@ public class RecherchePosition extends AppCompatActivity implements RechercherAd
 
         for(Map.Entry entry:listeAdresses.entrySet()) {
             adresse = (String) entry.getValue();
-            locationAdresse = new LatLng();
+            locationAdresse = new FormationCoordinates();
             try {
                 locationAdresse = getLocationFromAddress(adresse);
             } catch (IOException e) {

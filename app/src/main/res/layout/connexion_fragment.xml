@@ -10,7 +10,7 @@
 
     <EditText
         android:id="@+id/pseudo_utilisateur"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/pseudo_utilisateur"
         android:background="@drawable/border"
@@ -21,7 +21,7 @@
 
     <EditText
         android:id="@+id/mot_de_passe"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/mot_de_passe"
         android:inputType="textPassword"
@@ -33,14 +33,14 @@
 
     <Button
         android:id="@+id/bouton_connexion"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/bouton_connexion"
         android:onClick="connexion"
         android:background="#9ac5e4"/>
 
     <TextView
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/mot_de_passe_oublie"
         android:layout_marginTop="20dp"

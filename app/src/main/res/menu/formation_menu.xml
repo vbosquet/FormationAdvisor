@@ -6,12 +6,12 @@
     <item
         android:id="@+id/editer_formation"
         android:title="@string/bouton_enregistrer"
-        android:icon="@drawable/ic_action_edit_light"
+        android:icon="@mipmap/ic_lead_pencil"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/supprimer_formation"
         android:title="@string/bouton_supprimer_formation"
-        android:icon="@drawable/ic_action_discard_light"
+        android:icon="@mipmap/ic_action_delete"
         app:showAsAction="ifRoom" />
 </menu>

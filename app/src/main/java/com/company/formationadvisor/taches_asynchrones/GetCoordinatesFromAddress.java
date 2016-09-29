@@ -2,35 +2,33 @@ package com.company.formationadvisor.taches_asynchrones;
 
 import android.os.AsyncTask;
 
-import com.company.formationadvisor.modeles.IPAddress;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
-public class RechercherFormationParIdCentreFormation extends AsyncTask<String, String, String>{
+/**
+ * Created by Wivi on 26-09-16.
+ */
+public class GetCoordinatesFromAddress extends AsyncTask<String, String, String> {
 
-    private IRechercheFormationParIdCentreFormation callback;
-    private String ip;
+    private IGetCoordinatesFromAddress callback;
 
-    public RechercherFormationParIdCentreFormation(IRechercheFormationParIdCentreFormation callback, IPAddress ipAddress) {
+    public GetCoordinatesFromAddress(IGetCoordinatesFromAddress callback) {
         this.callback = callback;
-        this.ip = ipAddress.getIpAddress();
     }
-
 
     @Override
     protected String doInBackground(String... params) {
-        String id = params[0];
-        String token = params[1];
+        String address = params[0];
 
-        URL url;
         try {
-            url = new URL("http://"+ip+"/webService_Android/rechercher_formation_par_id_centre_formation.php?id="+id+
-                    "&token="+token);
+            String encodedAddress = URLEncoder.encode(address, "UTF-8");
+            URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address="+
+                    encodedAddress+"&key=AIzaSyCjhRHOckZVNVVItaM6gmkxegMOWL6UEao");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -53,15 +51,16 @@ public class RechercherFormationParIdCentreFormation extends AsyncTask<String, S
             e.printStackTrace();
         }
 
+
         return null;
     }
 
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        callback.afficherInfoFormation(string);
+        callback.getCoordinates(string);
     }
 
-    public interface IRechercheFormationParIdCentreFormation{
-        void afficherInfoFormation(String string);
+    public interface IGetCoordinatesFromAddress {
+        void getCoordinates(String string);
     }
 }

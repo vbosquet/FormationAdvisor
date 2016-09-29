@@ -61,7 +61,6 @@ public class MaListeDeFormations extends AppCompatActivity implements Rechercher
 
     @Override
     public void afficherInfoFormation(final String string) {
-        Log.i("CONTENT_STRING", string);
         try {
             JSONObject jsonObject = new JSONObject(string);
             JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
@@ -118,14 +117,6 @@ public class MaListeDeFormations extends AppCompatActivity implements Rechercher
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             case  R.id.nouveau:
                 intent = new Intent(this, NouveauCentreFormation.class);
                 startActivity(intent);

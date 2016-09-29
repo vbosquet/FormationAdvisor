@@ -29,8 +29,7 @@ public class FormationAdaptater extends ArrayAdapter<Formation>{
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_view_formation, parent, false);
             viewHolder.nom = (TextView) convertView.findViewById(R.id.nom_formation);
-            viewHolder.dateDebut = (TextView) convertView.findViewById(R.id.date_debut_formation);
-            viewHolder.dateFin = (TextView) convertView.findViewById(R.id.date_fin_formation);
+            viewHolder.dureeFormation = (TextView) convertView.findViewById(R.id.date_debut_formation);
             viewHolder.description = (TextView) convertView.findViewById(R.id.description_formation);
             convertView.setTag(viewHolder);
         } else {
@@ -38,8 +37,7 @@ public class FormationAdaptater extends ArrayAdapter<Formation>{
         }
 
         viewHolder.nom.setText(formation.getNom());
-        viewHolder.dateDebut.setText(formation.getDateDebut());
-        viewHolder.dateFin.setText(formation.getDateFin());
+        viewHolder.dureeFormation.setText(formation.getDureeFormation());
         viewHolder.description.setText(formation.getDescription());
 
         return convertView;
@@ -47,8 +45,7 @@ public class FormationAdaptater extends ArrayAdapter<Formation>{
 
     public static class ViewHolder {
         TextView nom;
-        TextView dateDebut;
-        TextView dateFin;
+        TextView dureeFormation;
         TextView description;
     }
 }

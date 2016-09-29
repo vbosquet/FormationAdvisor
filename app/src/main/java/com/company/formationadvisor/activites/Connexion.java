@@ -1,17 +1,14 @@
 package com.company.formationadvisor.activites;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,14 +16,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.fragments.ConnexionFragment;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
-import com.company.formationadvisor.taches_asynchrones.RechercherMessageParPseudo;
 import com.company.formationadvisor.taches_asynchrones.RechercherUtilisateurParPseudo;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,8 +28,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 public class Connexion extends AppCompatActivity implements ConnexionFragment.IConnexion,
-        RechercherUtilisateurParPseudo.IRechercheUtilisateurParPseudo,
-        RechercherMessageParPseudo.IRechercheMessageParPseudo {
+        RechercherUtilisateurParPseudo.IRechercheUtilisateurParPseudo {
 
     EditText pseudo, mot_de_passe;
     Intent intent;
@@ -110,70 +102,58 @@ public class Connexion extends AppCompatActivity implements ConnexionFragment.IC
 
     @Override
     public void afficherResultatRecherche(String string) throws JSONException, NoSuchProviderException, NoSuchAlgorithmException {
-        JSONObject jsonObject = new JSONObject(string);
-        message = jsonObject.getString("success");
+        if (string == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Problème de connexion");
+            builder.setMessage("Apparemment, tu n'as pas de connexion à internet. Vérifie que ton wifi soit bien activé.");
+            builder.setNegativeButton("Ok", new DialogInterface.OnClickListener(){
 
-        if (message.equals("true")) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-            JSONObject infosUtilisateur = new JSONObject(jsonObject.getString("info_utilisateur"));
-            salt = infosUtilisateur.getString("sel");
-            motDePasseEnregistre =  infosUtilisateur.getString("mot_de_passe");
-            nouveauMotDePassCrypte = crypterMotDePasse(mot_de_passe.getText().toString(), salt);
+                }
+            });
 
-            if (motDePasseEnregistre.equals(nouveauMotDePassCrypte)) {
+            AlertDialog dialog = builder.create();
+            dialog.show();
 
-                preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("pseudo", infosUtilisateur.getString("username"));
-                editor.putInt("id", Integer.parseInt(infosUtilisateur.getString("id_utilisateur")));
-                editor.putString("token", salt);
-                editor.putString("admin", infosUtilisateur.getString("admin"));
-                editor.apply();
-
-                RechercherMessageParPseudo tache = new RechercherMessageParPseudo(this, ipAddress);
-                tache.execute(infosUtilisateur.getString("username"), salt);
-
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-
-
-            } else  {
-                Toast.makeText(this, "Votre mot de passe est incorrect.", Toast.LENGTH_SHORT).show();
-            }
         } else {
-            Toast.makeText(this, "Votre pseudo n'existe pas ou est incorrect.", Toast.LENGTH_SHORT).show();
-        }
 
-        }
-
-    @Override
-    public void afficherResultatRechercheMessage(String string) {
-        try {
             JSONObject jsonObject = new JSONObject(string);
-            JSONArray jsonArray = jsonObject.getJSONArray("liste_message");
+            message = jsonObject.getString("success");
 
-            if(jsonArray.length() > 0) {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                builder.setSmallIcon(R.mipmap.ic_launcher);
-                builder.setContentTitle("FormationAdvisor");
-                builder.setContentText("Vous avez reçu " + jsonArray.length() +" nouveau(x) message(s).");
-                builder.setSound(Settings.System.getUriFor(Settings.System.NOTIFICATION_SOUND));
-                builder.setVibrate(new long[] {200, 200, 200, 200, 200});
+            if (message.equals("true")) {
 
-                Intent resultIntent = new Intent(this, BoiteReceptionMessage.class);
-                PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(resultPendingIntent);
+                JSONObject infosUtilisateur = new JSONObject(jsonObject.getString("info_utilisateur"));
+                salt = infosUtilisateur.getString("sel");
+                motDePasseEnregistre =  infosUtilisateur.getString("mot_de_passe");
+                nouveauMotDePassCrypte = crypterMotDePasse(mot_de_passe.getText().toString(), salt);
 
-                Notification notification = builder.build();
-                int ID = 001;
+                if (motDePasseEnregistre.equals(nouveauMotDePassCrypte)) {
 
-                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                manager.notify(ID, notification);
+                    preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("pseudo", infosUtilisateur.getString("username"));
+                    editor.putInt("id", Integer.parseInt(infosUtilisateur.getString("id_utilisateur")));
+                    editor.putString("token", salt);
+                    editor.putString("admin", infosUtilisateur.getString("admin"));
+                    editor.apply();
+
+                    if (infosUtilisateur.getString("admin").equals("true")) {
+                        intent = new Intent(this, ApprouverFormation.class);
+                        startActivity(intent);
+
+                    } else {
+                        intent = new Intent(this, TableauDeBord.class);
+                        startActivity(intent);
+                    }
+
+                } else  {
+                    Toast.makeText(this, "Votre mot de passe est incorrect.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Votre pseudo n'existe pas ou est incorrect.", Toast.LENGTH_SHORT).show();
             }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
     }
 }

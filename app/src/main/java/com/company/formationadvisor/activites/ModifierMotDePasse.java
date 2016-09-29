@@ -1,27 +1,32 @@
 package com.company.formationadvisor.activites;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
 import com.company.formationadvisor.taches_asynchrones.ModificationMotDePasse;
+import com.company.formationadvisor.taches_asynchrones.RechercherFormationParIdUtilisateur;
 import com.company.formationadvisor.taches_asynchrones.RechercherUtilisateurParPseudo;
+import com.company.formationadvisor.taches_asynchrones.SuppressionCentreFormation;
+import com.company.formationadvisor.taches_asynchrones.SuppressionEvaluation;
+import com.company.formationadvisor.taches_asynchrones.SuppressionFormationParIdUtilisateur;
+import com.company.formationadvisor.taches_asynchrones.SuppressionLocalite;
+import com.company.formationadvisor.taches_asynchrones.SuppressionUtilisateur;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,16 +40,20 @@ import java.util.regex.Pattern;
 import static java.lang.String.valueOf;
 
 public class ModifierMotDePasse extends AppCompatActivity implements RechercherUtilisateurParPseudo.IRechercheUtilisateurParPseudo,
-        ModificationMotDePasse.IModifierMotDePasseActuel {
+        ModificationMotDePasse.IModifierMotDePasseActuel,
+        SuppressionEvaluation.ISupprimerEvaluation,
+        SuppressionFormationParIdUtilisateur.ISupprimerFormationParIdUtilisateur,
+        SuppressionUtilisateur.ISupprimerUtilisateur,
+        RechercherFormationParIdUtilisateur.IRechercherFormationParIdUtilisateur,
+        SuppressionCentreFormation.ISuppressionCentreFormation,
+        SuppressionLocalite.ISuppressionLocalite {
 
     SharedPreferences preferences;
     String pseudo, salt, motDePasseEnregistre, motDePasseActuelCrypte, nouveauMotDePasseCrypte, message,token;
-
     EditText motDePasseActuel, nouveauMotDePasse, confirmationMotDePasse;
-
     Intent intent;
-
     IPAddress ipAddress;
+    int idUtilisateur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,7 @@ public class ModifierMotDePasse extends AppCompatActivity implements RechercherU
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         pseudo = preferences.getString("pseudo", "");
         token = preferences.getString("token", "");
+        idUtilisateur = preferences.getInt("id", 0);
 
         ipAddress = new IPAddress();
 
@@ -87,24 +97,9 @@ public class ModifierMotDePasse extends AppCompatActivity implements RechercherU
         return matcher.matches();
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -193,5 +188,116 @@ public class ModifierMotDePasse extends AppCompatActivity implements RechercherU
             e.printStackTrace();
         }
 
+    }
+
+    public void supprimerCompte(View view) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Etes-vous sûr de vouloir supprimer votre compte ?");
+        builder.setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SuppressionEvaluation suppressionEvaluation = new SuppressionEvaluation(ModifierMotDePasse.this, ipAddress);
+                suppressionEvaluation.execute(pseudo, token);
+
+                RechercherFormationParIdUtilisateur rechercherFormationParIdUtilisateur = new RechercherFormationParIdUtilisateur(ModifierMotDePasse.this, ipAddress);
+                rechercherFormationParIdUtilisateur.execute(String.valueOf(idUtilisateur), token);
+            }
+        });
+
+        builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("SUPPRESSION_COMPTE", "Annulation");
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void confirmerSuppressionEvaluation(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            String message = jsonObject.getString("success");
+
+            if (message.equals("true") || message.equals("empty")) {
+                SuppressionFormationParIdUtilisateur suppressionFormationParIdUtilisateur = new SuppressionFormationParIdUtilisateur(this, ipAddress);
+                suppressionFormationParIdUtilisateur.execute(String.valueOf(idUtilisateur), token);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void confirmerSuppressionFormation(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            String message = jsonObject.getString("success");
+
+            if (message.equals("true") || message.equals("empty")) {
+                SuppressionUtilisateur suppressionUtilisateur = new SuppressionUtilisateur(this, ipAddress);
+                suppressionUtilisateur.execute(String.valueOf(idUtilisateur), token);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void afficherConfirmationSuppressionUtilisateur(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            String message = jsonObject.getString("success");
+
+            if (message.equals("true")) {
+                Toast.makeText(this, "Supression réussie", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Echec de la suppression", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void afficherInfoFormation(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
+
+            for (int i = 0; i<jsonArray.length(); i++) {
+                JSONObject jsonData = jsonArray.getJSONObject(i);
+                String idCentreFormation = jsonData.getString("id_centre_formation");
+
+                SuppressionCentreFormation suppressionCentreFormation = new SuppressionCentreFormation(this, ipAddress);
+                suppressionCentreFormation.execute(idCentreFormation, token);
+
+                SuppressionLocalite suppressionLocalite = new SuppressionLocalite(this, ipAddress);
+                suppressionLocalite.execute(idCentreFormation, token);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void confirmerSuppressionCentreFormation(String string) {
+        Log.i("SUPPRESSION_CENTRE", string);
+    }
+
+    @Override
+    public void confirmerSuppresionLocalite(String string) {
+        Log.i("SUPPRESSION_LOCALITE", string);
     }
 }

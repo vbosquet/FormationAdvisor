@@ -12,7 +12,7 @@
 
     <Button
         android:id="@+id/inscription"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/bouton_accueil_nouveau_membre"
         android:onClick="inscription"
@@ -20,13 +20,13 @@
 
     <Button
         android:id="@+id/connexion"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/bouton_accueil_ancien_membre"
         android:onClick="connexion" />
 
     <TextView
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/description_application"
         android:layout_marginTop="20dp"

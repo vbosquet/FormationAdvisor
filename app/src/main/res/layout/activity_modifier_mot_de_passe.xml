@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,90 +13,134 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/border">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/titre_editer_mot_de_passe"
-            android:textSize="20sp"
-            android:textColor="#3c3c3c"
-            android:layout_marginBottom="15dp"/>
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/border"
+            android:layout_marginBottom="25dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/mot_de_passe_actuel"
-            android:textColor="#3c3c3c"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/titre_editer_mot_de_passe"
+                android:textSize="20sp"
+                android:textColor="#3c3c3c"
+                android:layout_marginBottom="15dp"/>
 
-        <EditText
-            android:id="@+id/mot_de_passe_actuel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:background="@drawable/border_profil"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:textColor="#b1b0b0"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mot_de_passe_actuel"
+                android:textColor="#3c3c3c"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/nouveau_mot_de_passe"
-            android:textColor="#3c3c3c"/>
+            <EditText
+                android:id="@+id/mot_de_passe_actuel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:background="@drawable/border_profil"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:textColor="#b1b0b0"/>
 
-        <EditText
-            android:id="@+id/nouveau_mot_de_passe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:background="@drawable/border_profil"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:textColor="#b1b0b0"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nouveau_mot_de_passe"
+                android:textColor="#3c3c3c"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/confirmation_mot_de_passe"
-            android:textColor="#3c3c3c"/>
+            <EditText
+                android:id="@+id/nouveau_mot_de_passe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:background="@drawable/border_profil"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:textColor="#b1b0b0"/>
 
-        <EditText
-            android:id="@+id/confirmation_mot_de_passe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:background="@drawable/border_profil"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
-            android:textColor="#b1b0b0"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/confirmation_mot_de_passe"
+                android:textColor="#3c3c3c"/>
 
-        <Button
-            android:id="@+id/bouton_modifier_mot_de_passe"
+            <EditText
+                android:id="@+id/confirmation_mot_de_passe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:background="@drawable/border_profil"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:textColor="#b1b0b0"/>
+
+            <Button
+                android:id="@+id/bouton_modifier_mot_de_passe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bouton_modifier_mot_de_passe"
+                android:onClick="modifierMotDePasse"
+                android:background="#9ac5e4"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/bouton_modifier_mot_de_passe"
-            android:onClick="modifierMotDePasse"
-            android:background="#9ac5e4"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/border">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Supprimer mon compte"
+                android:textSize="20sp"
+                android:textColor="#3c3c3c"
+                android:layout_marginBottom="15dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="La suppression de votre compte affecte toutes les données et services qui lui sont associés"
+                android:textColor="#3c3c3c"
+                android:layout_marginBottom="15dp"/>
+
+            <Button
+                android:id="@+id/suppression_compte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bouton_suppression_compte"
+                android:onClick="supprimerCompte"
+                android:background="#9ac5e4"/>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

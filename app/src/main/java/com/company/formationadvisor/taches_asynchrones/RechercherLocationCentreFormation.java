@@ -11,26 +11,27 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RechercherFormationParIdCentreFormation extends AsyncTask<String, String, String>{
+/**
+ * Created by Wivi on 27-09-16.
+ */
+public class RechercherLocationCentreFormation extends AsyncTask<String, String, String> {
 
-    private IRechercheFormationParIdCentreFormation callback;
+    private IRechercherLocationCentreFormation callback;
     private String ip;
 
-    public RechercherFormationParIdCentreFormation(IRechercheFormationParIdCentreFormation callback, IPAddress ipAddress) {
+    public  RechercherLocationCentreFormation(IRechercherLocationCentreFormation callback, IPAddress ipAddress) {
         this.callback = callback;
         this.ip = ipAddress.getIpAddress();
     }
 
-
     @Override
     protected String doInBackground(String... params) {
-        String id = params[0];
-        String token = params[1];
+        String token = params[0];
 
-        URL url;
         try {
-            url = new URL("http://"+ip+"/webService_Android/rechercher_formation_par_id_centre_formation.php?id="+id+
-                    "&token="+token);
+
+            URL url = new URL("http://"+ip+"/webService_Android/rechercher_localite_centre_formation.php?token="+token);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -58,10 +59,10 @@ public class RechercherFormationParIdCentreFormation extends AsyncTask<String, S
 
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        callback.afficherInfoFormation(string);
+        callback.afficherInfoLocation(string);
     }
 
-    public interface IRechercheFormationParIdCentreFormation{
-        void afficherInfoFormation(String string);
+    public interface IRechercherLocationCentreFormation {
+        void afficherInfoLocation(String string);
     }
 }

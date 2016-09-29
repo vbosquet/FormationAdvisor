@@ -6,31 +6,33 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
+import com.company.formationadvisor.taches_asynchrones.RechercherFormationParIdUtilisateur;
+import com.company.formationadvisor.taches_asynchrones.SuppressionCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.SuppressionEvaluation;
 import com.company.formationadvisor.taches_asynchrones.SuppressionFormationParIdUtilisateur;
+import com.company.formationadvisor.taches_asynchrones.SuppressionLocalite;
 import com.company.formationadvisor.taches_asynchrones.SuppressionUtilisateur;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SupprimerCompte extends AppCompatActivity implements SuppressionEvaluation.ISupprimerEvaluation,
         SuppressionFormationParIdUtilisateur.ISupprimerFormationParIdUtilisateur,
-        SuppressionUtilisateur.ISupprimerUtilisateur {
+        SuppressionUtilisateur.ISupprimerUtilisateur,
+        RechercherFormationParIdUtilisateur.IRechercherFormationParIdUtilisateur,
+        SuppressionCentreFormation.ISuppressionCentreFormation,
+        SuppressionLocalite.ISuppressionLocalite {
 
     SharedPreferences preferences;
-    String pseudo, token, message1, message2, message3;
+    String pseudo, token;
     int idUtilisateur;
-    Intent intent;
     IPAddress ipAddress;
 
     @Override
@@ -49,28 +51,16 @@ public class SupprimerCompte extends AppCompatActivity implements SuppressionEva
 
     public  void supressionCompte(View view) {
 
-        SuppressionEvaluation tache1 = new SuppressionEvaluation(this, ipAddress);
-        tache1.execute(pseudo, token);
-    }
+        SuppressionEvaluation suppressionEvaluation = new SuppressionEvaluation(this, ipAddress);
+        suppressionEvaluation.execute(pseudo, token);
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }*/
+        RechercherFormationParIdUtilisateur rechercherFormationParIdUtilisateur = new RechercherFormationParIdUtilisateur(this, ipAddress);
+        rechercherFormationParIdUtilisateur.execute(String.valueOf(idUtilisateur), token);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -80,11 +70,11 @@ public class SupprimerCompte extends AppCompatActivity implements SuppressionEva
     public void confirmerSuppressionEvaluation(String string) {
         try {
             JSONObject jsonObject = new JSONObject(string);
-            message1 = jsonObject.getString("success");
+            String message = jsonObject.getString("success");
 
-            if (message1.equals("true") || message1.equals("empty")) {
-                SuppressionFormationParIdUtilisateur tache2 = new SuppressionFormationParIdUtilisateur(this, ipAddress);
-                tache2.execute(String.valueOf(idUtilisateur), token);
+            if (message.equals("true") || message.equals("empty")) {
+                SuppressionFormationParIdUtilisateur suppressionFormationParIdUtilisateur = new SuppressionFormationParIdUtilisateur(this, ipAddress);
+                suppressionFormationParIdUtilisateur.execute(String.valueOf(idUtilisateur), token);
 
             }
         } catch (JSONException e) {
@@ -96,11 +86,11 @@ public class SupprimerCompte extends AppCompatActivity implements SuppressionEva
     public void confirmerSuppressionFormation(String string) {
         try {
             JSONObject jsonObject = new JSONObject(string);
-            message2 = jsonObject.getString("success");
+            String message = jsonObject.getString("success");
 
-            if (message2.equals("true") || message2.equals("empty")) {
-                SuppressionUtilisateur tache3 = new SuppressionUtilisateur(this, ipAddress);
-                tache3.execute(String.valueOf(idUtilisateur), token);
+            if (message.equals("true") || message.equals("empty")) {
+                SuppressionUtilisateur suppressionUtilisateur = new SuppressionUtilisateur(this, ipAddress);
+                suppressionUtilisateur.execute(String.valueOf(idUtilisateur), token);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -111,11 +101,11 @@ public class SupprimerCompte extends AppCompatActivity implements SuppressionEva
     public void afficherConfirmationSuppressionUtilisateur(String string) {
         try {
             JSONObject jsonObject = new JSONObject(string);
-            message3 = jsonObject.getString("success");
+            String message = jsonObject.getString("success");
 
-            if (message3.equals("true")) {
+            if (message.equals("true")) {
                 Toast.makeText(this, "Supression réussie", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Echec de la suppression", Toast.LENGTH_SHORT).show();
@@ -124,5 +114,38 @@ public class SupprimerCompte extends AppCompatActivity implements SuppressionEva
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void afficherInfoFormation(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
+
+            for (int i = 0; i<jsonArray.length(); i++) {
+                JSONObject jsonData = jsonArray.getJSONObject(i);
+                String idCentreFormation = jsonData.getString("id_centre_formation");
+
+                SuppressionCentreFormation suppressionCentreFormation = new SuppressionCentreFormation(this, ipAddress);
+                suppressionCentreFormation.execute(idCentreFormation, token);
+
+                SuppressionLocalite suppressionLocalite = new SuppressionLocalite(this, ipAddress);
+                suppressionLocalite.execute(idCentreFormation, token);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void confirmerSuppressionCentreFormation(String string) {
+        Log.i("SUPPRESSION_CENTRE", string);
+    }
+
+    @Override
+    public void confirmerSuppresionLocalite(String string) {
+        Log.i("SUPPRESSION_LOCALITE", string);
     }
 }

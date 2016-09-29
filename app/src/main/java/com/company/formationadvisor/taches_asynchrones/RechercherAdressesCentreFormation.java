@@ -47,13 +47,10 @@ public class RechercherAdressesCentreFormation extends AsyncTask<String, String,
 
             return stringBuilder.toString();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

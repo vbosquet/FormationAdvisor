@@ -23,13 +23,13 @@ public class SupprimerMessage extends AsyncTask<String, String, String>{
 
     @Override
     protected String doInBackground(String... params) {
-        String pseudo = params[0];
+        String idMessage = params[0];
         String token = params[1];
 
         URL url;
         try {
 
-            url = new URL("http://"+ip+"/webService_Android/supprimer_message.php?pseudo="+pseudo+
+            url = new URL("http://"+ip+"/webService_Android/supprimer_message.php?id_message="+idMessage+
                     "&token="+token);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

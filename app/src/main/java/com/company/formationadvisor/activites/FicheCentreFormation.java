@@ -3,23 +3,23 @@ package com.company.formationadvisor.activites;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.Formation;
 import com.company.formationadvisor.modeles.FormationAdaptater;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
 import com.company.formationadvisor.taches_asynchrones.RechercherFormationParIdCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdCentreFormation;
+import com.company.formationadvisor.taches_asynchrones.SupprimerMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,25 +27,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class FicheCentreFormation extends AppCompatActivity implements RechercherParIdCentreFormation.IRechercheParIdCentreFormation,
+public class FicheCentreFormation extends AppCompatActivity implements
         RechercherFormationParIdCentreFormation.IRechercheFormationParIdCentreFormation {
 
     Intent intent;
-    String idCentreFormation, token;
+    String idCentreFormation, token, nomFormation, dateDebut, dateFin, description;
     int idUtilisateur;
     SharedPreferences preferences;
-
-    TextView nom, rue, codePostal, localite, telephone, email, siteInternet;
-    String text1, text2, text3, text4, text5, text6, text7;
     JSONObject jsonObject;
-
-    ArrayList listeNomFormation, listeDateDebut, listeDateFin, listeDescription;
+    ArrayList listeIdFormation, listeNomFormation, listeDateDebut, listeDateFin, listeDescription;
     ArrayList<Formation> listeFormation;
     Formation formation;
-    String nomFormation, dateDebut, dateFin, description;
-
     ListView listView;
-
     IPAddress ipAddress;
 
     @Override
@@ -53,13 +46,10 @@ public class FicheCentreFormation extends AppCompatActivity implements Recherche
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fiche_centre_formation);
 
-        nom = (TextView) findViewById(R.id.nom_centre_formation);
-        rue = (TextView) findViewById(R.id.adresse_centre_formation);
-        codePostal = (TextView) findViewById(R.id.code_postal_centre_formation);
-        localite = (TextView) findViewById(R.id.localite_centre_formation);
-        telephone = (TextView) findViewById(R.id.telephone_centre_formation);
-        email = (TextView) findViewById(R.id.email_centre_formation);
-        siteInternet = (TextView) findViewById(R.id.site_internet_centre_formation);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Bundle extra = this.getIntent().getExtras();
         if (extra != null) {
@@ -72,69 +62,29 @@ public class FicheCentreFormation extends AppCompatActivity implements Recherche
 
         ipAddress = new IPAddress();
 
-        RechercherParIdCentreFormation tache1 = new RechercherParIdCentreFormation(this, ipAddress);
-        RechercherFormationParIdCentreFormation tache2 = new RechercherFormationParIdCentreFormation(this, ipAddress);
-        tache1.execute(idCentreFormation, token);
-        tache2.execute(idCentreFormation, token);
+        RechercherFormationParIdCentreFormation rechercherFormationParIdCentreFormation = new RechercherFormationParIdCentreFormation(this, ipAddress);
+        rechercherFormationParIdCentreFormation.execute(idCentreFormation, token);
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
-    public void afficherInfoCentreFormation(String string) {
-        try {
-            jsonObject = new JSONObject(string);
-            text1 = jsonObject.getString("libelle");
-            text2 = jsonObject.getString("adresse");
-            text3 = jsonObject.getString("code_postal");
-            text4 = jsonObject.getString("numero_de_telephone");
-            text5 = jsonObject.getString("email");
-            text6 = jsonObject.getString("site_internet");
-            text7 = jsonObject.getString("localite");
-
-            nom.setText(text1);
-            rue.setText(text2);
-            codePostal.setText(text3);
-            telephone.setText(text4);
-            email.setText(text5);
-            siteInternet.setText(text6);
-            localite.setText(text7);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
     public void afficherInfoFormation(String string) {
-        Log.i("CONTENT_STRING", string);
 
         try {
             jsonObject = new JSONObject(string);
             JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
 
+            listeIdFormation = new ArrayList();
             listeNomFormation = new ArrayList();
             listeDateDebut = new ArrayList();
             listeDateFin = new ArrayList();
@@ -142,6 +92,7 @@ public class FicheCentreFormation extends AppCompatActivity implements Recherche
 
             for (int i=0; i<jsonArray.length(); i++) {
                 JSONObject jsonData = jsonArray.getJSONObject(i);
+                listeIdFormation.add((jsonData.getString("id_formation")));
                 listeNomFormation.add(jsonData.getString("libelle"));
                 listeDateDebut.add(jsonData.getString("date_de_debut"));
                 listeDateFin.add(jsonData.getString("date_de_fin"));
@@ -167,6 +118,23 @@ public class FicheCentreFormation extends AppCompatActivity implements Recherche
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void displayMoreInformation(View view) {
+
+        int position = listView.getPositionForView(view);
+        String idFormation = String.valueOf(listeIdFormation.get(position));
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("idFormation", idFormation);
+        editor.putString("idCentreFormation", idCentreFormation);
+        editor.apply();
+
+        intent = new Intent(getApplicationContext(), FicheFormation.class);
+        startActivity(intent);
+
 
     }
 }

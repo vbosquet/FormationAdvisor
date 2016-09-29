@@ -2,12 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/border_messagerie">
 
     <TextView
         android:id="@+id/nom_formation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:textColor="#3c3c3c"/>
 
     <TextView
         android:id="@+id/date_debut_formation"
@@ -15,13 +21,17 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/date_fin_formation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <TextView
         android:id="@+id/description_formation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:maxLines="3"
+        android:ellipsize="end"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_chevron_double_right_light"
+        android:onClick="displayMoreInformation"
+        android:layout_gravity="right" />
 
 </LinearLayout>

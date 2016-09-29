@@ -24,6 +24,7 @@ import com.company.formationadvisor.taches_asynchrones.ModificationFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.RechercherParIdFormation;
 import com.company.formationadvisor.taches_asynchrones.SuppressionFormationParIdFormation;
+import com.company.formationadvisor.taches_asynchrones.SuppressionLocalite;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,32 +81,32 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
 
         ipAddress = new IPAddress();
 
-        RechercherParIdFormation tache1 = new RechercherParIdFormation(this, ipAddress);
-        RechercherParIdCentreFormation tache2 = new RechercherParIdCentreFormation(this, ipAddress);
-        tache1.execute(idFormation, token);
-        tache2.execute(idCentreFormation, token);
+        RechercherParIdFormation rechercherParIdFormation = new RechercherParIdFormation(this, ipAddress);
+        RechercherParIdCentreFormation rechercherParIdCentreFormation = new RechercherParIdCentreFormation(this, ipAddress);
+
+        rechercherParIdFormation.execute(idFormation, token);
+        rechercherParIdCentreFormation.execute(idCentreFormation, token);
     }
 
     public void modifierFormation() {
-        ModificationFormation tache1 = new ModificationFormation(this, ipAddress);
-        tache1.execute(nom.getText().toString(), description.getText().toString(),
+        ModificationFormation modificationFormation = new ModificationFormation(this, ipAddress);
+        modificationFormation.execute(nom.getText().toString(), description.getText().toString(),
                 dateDebut.getText().toString(), dateFin.getText().toString(), idFormation, token);
 
-        ModificationCentreFormation tache2 = new ModificationCentreFormation(this, ipAddress);
-        tache2.execute(etablissement.getText().toString(), rue.getText().toString(),
+        ModificationCentreFormation modificationCentreFormation = new ModificationCentreFormation(this, ipAddress);
+        modificationCentreFormation.execute(etablissement.getText().toString(), rue.getText().toString(),
                 codePostal.getText().toString(), telephone.getText().toString(),
                 email.getText().toString(), siteInternet.getText().toString(), idCentreFormation,
                 localite.getText().toString(), token);
     }
 
     public void supprimerFormation() {
-        SuppressionFormationParIdFormation tache = new SuppressionFormationParIdFormation(this, ipAddress);
-        tache.execute(idFormation, token);
+        SuppressionFormationParIdFormation suppressionFormationParIdFormation = new SuppressionFormationParIdFormation(this, ipAddress);
+        suppressionFormationParIdFormation.execute(idFormation, token);
     }
 
     @Override
     public void afficherInfoFormation(String string) {
-        Log.i("CONTENT_STRING", string);
         try {
             jsonObject = new JSONObject(string);
             text1 = jsonObject.getString("libelle");
@@ -125,7 +126,6 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
 
     @Override
     public void afficherInfoCentreFormation(String string) {
-        Log.i("CONTENT_STRING", string);
         try {
             jsonObject = new JSONObject(string);
             text5 = jsonObject.getString("libelle");
@@ -158,7 +158,9 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
 
             if (message.equals("true")) {
                 Toast.makeText(this, "Modification réussie", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, MaListeDeFormations.class);
+                intent = new Intent(this, ModifierFormation.class);
+                intent.putExtra("idFormation", idFormation);
+                intent.putExtra("idCentreFormation", idCentreFormation);
                 startActivity(intent);
 
             } else {
@@ -180,6 +182,8 @@ public class ModifierFormation extends AppCompatActivity implements RechercherPa
             if (message.equals("true")) {
                 Toast.makeText(this, "Modification réussie", Toast.LENGTH_SHORT).show();
                 intent = new Intent(this, ModifierFormation.class);
+                intent.putExtra("idFormation", idFormation);
+                intent.putExtra("idCentreFormation", idCentreFormation);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "Echec des modifications", Toast.LENGTH_SHORT).show();

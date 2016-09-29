@@ -20,15 +20,17 @@ import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
 import com.company.formationadvisor.modeles.Utilisateur;
 import com.company.formationadvisor.taches_asynchrones.CreerNouvelleFormation;
+import com.company.formationadvisor.taches_asynchrones.SuppressionCentreFormation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NouvelleFormation extends AppCompatActivity implements CreerNouvelleFormation.ICreationFormation {
+public class NouvelleFormation extends AppCompatActivity implements CreerNouvelleFormation.ICreationFormation,
+        SuppressionCentreFormation.ISuppressionCentreFormation{
 
     EditText nomFormation, dateDebut, dateFin, description;
     JSONObject jsonObject;
-    String message, token;
+    String message, token, idCentreFormation;
     SharedPreferences preferences;
     Integer idUtilisateur;
     Intent intent;
@@ -54,6 +56,12 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
         token = preferences.getString("token", "");
 
         ipAddress = new IPAddress();
+
+        Bundle extra = this.getIntent().getExtras();
+
+        if (extra != null) {
+            idCentreFormation = extra.getString("id_centre_formation");
+        }
     }
 
     @Override
@@ -80,13 +88,6 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
 
     public void ajouterNouvelleFormation(View view){
 
-        Bundle extra = this.getIntent().getExtras();
-        String idCentreFormation = null;
-
-        if (extra != null) {
-            idCentreFormation = extra.getString("id_centre_formation");
-        }
-
         if (nomFormation.getText().toString().equals("") ||
                 dateDebut.getText().toString().equals("") ||
                 dateFin.getText().toString().equals("") ||
@@ -100,30 +101,21 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
         }
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            /*case R.id.tableau_de_bord:
-                intent = new Intent(this, TableauDeBord.class);
-                startActivity(intent);
-                return true;
-            case R.id.deconnexion:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;*/
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                SuppressionCentreFormation suppressionCentreFormation = new SuppressionCentreFormation(this, ipAddress);
+                suppressionCentreFormation.execute(idCentreFormation, token);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void confirmerSuppressionCentreFormation(String string) {
+        Log.i("SUPPRESSION", string);
+    }
 }

@@ -8,10 +8,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true"/>
-
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -69,9 +69,10 @@
             android:name=".activites.NouveauCentreFormation"
             android:label="@string/activity_nouveau_centre_formation"
             android:parentActivityName=".activites.TableauDeBord" />
-        <activity android:name=".activites.ResultatRechercheFormation"
+        <activity
+            android:name=".activites.ResultatRechercheFormation"
             android:label="@string/activity_resultat_recherche"
-            android:parentActivityName=".activites.TableauDeBord"/>
+            android:parentActivityName=".activites.TableauDeBord" />
         <activity
             android:name=".activites.FicheFormation"
             android:label="@string/activity_fiche_formation"
@@ -81,9 +82,14 @@
             android:label="@string/activity_ajouter_evaluation"
             android:parentActivityName=".activites.Commentaires" />
         <activity android:name=".activites.RecherchePosition" />
-        <activity android:name=".activites.FicheCentreFormation" />
+        <activity
+            android:name=".activites.FicheCentreFormation"
+            android:label="@string/activity_fiche_centre_formation"
+            android:parentActivityName=".activites.TableauDeBord" />
         <activity android:name=".activites.ApprouverFormation" />
-        <activity android:name=".activites.FicheFormationAValider" />
+        <activity android:name=".activites.FicheFormationAValider"
+            android:label="@string/activity_ficheformation_a_valider"
+            android:parentActivityName=".activites.ApprouverFormation"/>
 
         <service android:name=".services.MyFirebaseInstanceIdService">
             <intent-filter>
@@ -95,18 +101,22 @@
             android:name=".activites.BoiteReceptionMessage"
             android:label="@string/activity_boite_reception_message"
             android:parentActivityName=".activites.TableauDeBord" />
-        <activity android:name=".activites.InfosCentreFormation"
+        <activity
+            android:name=".activites.InfosCentreFormation"
             android:label="@string/activity_infos_organisme"
-            android:parentActivityName=".activites.FicheFormation"/>
-        <activity android:name=".activites.Commentaires"
+            android:parentActivityName=".activites.FicheFormation" />
+        <activity
+            android:name=".activites.Commentaires"
             android:label="@string/activity_commentaires"
             android:parentActivityName=".activites.FicheFormation" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB_S1MQT_9QhbNf3mt6iuosXtyOpVV8sU8"/>
+            android:value="AIzaSyCjhRHOckZVNVVItaM6gmkxegMOWL6UEao" />
+
     </application>
 
 </manifest>

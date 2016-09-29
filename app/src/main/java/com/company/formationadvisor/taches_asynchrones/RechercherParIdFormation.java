@@ -30,9 +30,8 @@ public class RechercherParIdFormation extends AsyncTask<String, String, String>{
         String id = params[0];
         String token = params[1];
 
-        URL url;
         try {
-            url = new URL("http://"+ip+"/webService_Android/rechercher_id_formation.php?id="+id+
+            URL url = new URL("http://"+ip+"/webService_Android/rechercher_id_formation.php?id="+id+
                 "&token="+token);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -50,14 +49,8 @@ public class RechercherParIdFormation extends AsyncTask<String, String, String>{
             bufferedReader.close();
             inputStream.close();
 
-            Log.i("CONTENT_STRINGBUILDER", stringBuilder.toString());
-
             return stringBuilder.toString();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

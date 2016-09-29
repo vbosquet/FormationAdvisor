@@ -11,14 +11,14 @@
 
     <TextView
         android:id="@+id/expediteur_message"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="#3c3c3c"/>
 
 
     <TextView
         android:id="@+id/texte_message"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ImageView
@@ -27,16 +27,5 @@
         android:src="@mipmap/ic_action_delete"
         android:onClick="supprimerMessage"
         android:layout_gravity="right" />
-
-    <!--<TextView
-        android:id="@+id/date_envoi_messsage"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />-->
-
-    <!--<Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bouton_supprimer_formation"
-        android:onClick="supprimerMessage"/>-->
 
 </LinearLayout>

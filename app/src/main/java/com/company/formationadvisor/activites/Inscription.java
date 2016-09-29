@@ -1,8 +1,10 @@
 package com.company.formationadvisor.activites;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -175,36 +177,55 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
 
     @Override
     public void afficherResultatRecherche(String string) {
-        try {
-            JSONObject jsonObject = new JSONObject(string);
-            message = jsonObject.getString("success");
 
-            if (message.equals("false")) {
+        if (string == null) {
 
-                if (!isValidEmail(email.getText().toString())) {
-                    Toast.makeText(this, "Adresse email invalide", Toast.LENGTH_SHORT).show();
-                } else if (!isValidPassword(mot_de_passe.getText().toString())) {
-                    Toast.makeText(this, "Mot de passe invalide", Toast.LENGTH_SHORT).show();
-                } else {
-                    CreerNouveauToken tache2 = new CreerNouveauToken(this, ipAddress);
-                    tache2.execute(hexString);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Problème de connexion");
+            builder.setMessage("Apparemment, tu n'as pas de connexion à internet. Vérifie que ton wifi soit bien activé.");
+            builder.setNegativeButton("Ok", new DialogInterface.OnClickListener(){
 
-                    CreerNouvelUtilisateur tache3 = new CreerNouvelUtilisateur(this, ipAddress);
-                    tache3.execute(nom.getText().toString(), prenom.getText().toString(),
-                            pseudo.getText().toString(), motDePasseCrypte,
-                            email.getText().toString(),
-                            hexString);
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                    intent = new Intent(this, TableauDeBord.class);
-                    startActivity(intent);
                 }
+            });
 
-            } else {
-                Toast.makeText(this, "Ce pseudo existe déjà", Toast.LENGTH_SHORT).show();
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        } else {
+
+            try {
+                JSONObject jsonObject = new JSONObject(string);
+                message = jsonObject.getString("success");
+
+                if (message.equals("false")) {
+
+                    if (!isValidEmail(email.getText().toString())) {
+                        Toast.makeText(this, "Adresse email invalide", Toast.LENGTH_SHORT).show();
+                    } else if (!isValidPassword(mot_de_passe.getText().toString())) {
+                        Toast.makeText(this, "Mot de passe invalide", Toast.LENGTH_SHORT).show();
+                    } else {
+                        CreerNouveauToken tache2 = new CreerNouveauToken(this, ipAddress);
+                        tache2.execute(hexString);
+
+                        CreerNouvelUtilisateur tache3 = new CreerNouvelUtilisateur(this, ipAddress);
+                        tache3.execute(nom.getText().toString(), prenom.getText().toString(),
+                                pseudo.getText().toString(), motDePasseCrypte,
+                                email.getText().toString(),
+                                hexString);
+
+                        intent = new Intent(this, TableauDeBord.class);
+                        startActivity(intent);
+                    }
+
+                } else {
+                    Toast.makeText(this, "Ce pseudo existe déjà", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
     }
 }

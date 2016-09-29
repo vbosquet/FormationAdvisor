@@ -10,27 +10,39 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
-public class RechercherFormationParIdCentreFormation extends AsyncTask<String, String, String>{
+/**
+ * Created by Wivi on 27-09-16.
+ */
+public class AjouterLocationCentreFormation extends AsyncTask<String, String, String> {
 
-    private IRechercheFormationParIdCentreFormation callback;
+    private IAjouterLocationCentreFormation callback;
     private String ip;
 
-    public RechercherFormationParIdCentreFormation(IRechercheFormationParIdCentreFormation callback, IPAddress ipAddress) {
+    public AjouterLocationCentreFormation(IAjouterLocationCentreFormation callback, IPAddress ipAddress) {
         this.callback = callback;
         this.ip = ipAddress.getIpAddress();
     }
 
-
     @Override
     protected String doInBackground(String... params) {
-        String id = params[0];
-        String token = params[1];
+        String nom = params[0];
+        String latitude = params[1];
+        String longitude = params[2];
+        String idCentreFormation = params[3];
+        String token = params[4];
 
-        URL url;
         try {
-            url = new URL("http://"+ip+"/webService_Android/rechercher_formation_par_id_centre_formation.php?id="+id+
+
+            String encodedname = URLEncoder.encode(nom, "UTF-8");
+
+            URL url = new URL("http://"+ip+"/webService_Android/ajouter_localite_centre_formation.php?nom_etablissement="+encodedname+
+                    "&latitude="+latitude+
+                    "&longitude="+longitude+
+                    "&id_centre_formation="+idCentreFormation+
                     "&token="+token);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -58,10 +70,10 @@ public class RechercherFormationParIdCentreFormation extends AsyncTask<String, S
 
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        callback.afficherInfoFormation(string);
+        callback.confirmationEnregistrementLocation(string);
     }
 
-    public interface IRechercheFormationParIdCentreFormation{
-        void afficherInfoFormation(String string);
+    public interface IAjouterLocationCentreFormation {
+        void confirmationEnregistrementLocation(String string);
     }
 }

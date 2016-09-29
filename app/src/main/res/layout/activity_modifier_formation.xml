@@ -101,15 +101,17 @@
                     android:layout_marginBottom="15dp">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:weightSum="1"
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
                             android:orientation="vertical"
-                            android:paddingRight="25dp">
+                            android:layout_marginRight="10dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -135,9 +137,11 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="10dp">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -261,7 +265,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/adresse_centre_formation"
+                                android:text="Adresse"
                                 android:textColor="#3c3c3c"/>
 
                             <EditText
@@ -350,23 +354,6 @@
                                 android:layout_marginBottom="10dp"/>
 
                             </LinearLayout>
-
-                        <!--<Button
-                            android:id="@+id/bouton_modifier_formation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/bouton_enregistrer"
-                            android:onClick="modifierFormation"
-                            android:background="#9ac5e4"
-                            android:layout_marginBottom="10dp"/>
-
-                        <Button
-                            android:id="@+id/bouton_supprimer_formation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/bouton_supprimer_formation"
-                            android:onClick="supprimerFormation"
-                            android:background="#9ac5e4"/>-->
 
         </LinearLayout>
 

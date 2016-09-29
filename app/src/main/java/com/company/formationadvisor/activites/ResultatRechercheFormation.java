@@ -50,11 +50,6 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        /*Bundle extra = this.getIntent().getExtras();
-        if(extra != null) {
-            motCle = extra.getString("motCle");
-        }*/
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         token = preferences.getString("token", "");
         motCle = preferences.getString("motCle", "");
@@ -111,8 +106,6 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                                 editor.apply();
 
                                 intent = new Intent(getApplicationContext(), FicheFormation.class);
-                                //intent.putExtra("idFormation", String.valueOf(listeIdFormation.get(i)));
-                                //intent.putExtra("idCentreFormation", String.valueOf(listeIdCentreFormation.get(i)));
                                 startActivity(intent);
                             }
                         }
