@@ -38,7 +38,6 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -67,12 +66,19 @@
             android:parentActivityName=".activites.TableauDeBord" />
         <activity
             android:name=".activites.NouveauCentreFormation"
-            android:label="@string/activity_nouveau_centre_formation"
+            android:label=""
             android:parentActivityName=".activites.TableauDeBord" />
         <activity
             android:name=".activites.ResultatRechercheFormation"
             android:label="@string/activity_resultat_recherche"
-            android:parentActivityName=".activites.TableauDeBord" />
+            android:parentActivityName=".activites.TableauDeBord">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activites.FicheFormation"
             android:label="@string/activity_fiche_formation"

@@ -189,6 +189,7 @@ public class TableauDeBord extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     protected void onNewIntent(Intent intent) {
+        setIntent(intent);
         handleIntent(intent);
     }
 
@@ -199,8 +200,8 @@ public class TableauDeBord extends AppCompatActivity implements OnMapReadyCallba
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("motCle", query);
             editor.apply();
-            Intent intent1 = new Intent(this, ResultatRechercheFormation.class);
-            startActivity(intent1);
+            Intent newIntent = new Intent(this, ResultatRechercheFormation.class);
+            startActivity(newIntent);
 
         }
     }

@@ -9,7 +9,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,9 +20,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
 import com.company.formationadvisor.taches_asynchrones.RechercheParMotCle;
 
 import org.json.JSONArray;
@@ -56,8 +53,10 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
 
         ipAddress = new IPAddress();
 
-        RechercheParMotCle tache = new RechercheParMotCle(this, ipAddress);
-        tache.execute(motCle, token);
+        RechercheParMotCle rechercheParMotCle = new RechercheParMotCle(this, ipAddress);
+        rechercheParMotCle.execute(motCle, token);
+
+        handleIntent(getIntent());
     }
 
     @Override
@@ -111,12 +110,25 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                         }
                     }
                 });
-
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        return true;
     }
 
     @Override
@@ -127,6 +139,20 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            RechercheParMotCle rechercheParMotCle = new RechercheParMotCle(this, ipAddress);
+            rechercheParMotCle.execute(query, token);
         }
     }
 }

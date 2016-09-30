@@ -76,4 +76,6 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="titre_editer_mot_de_passe">Modifier mon mot de passe</string>
+    <string name="choisir_etablissement">Choisir établissement</string>
+    <string name="cancel_title">Cancel</string>
 </resources>

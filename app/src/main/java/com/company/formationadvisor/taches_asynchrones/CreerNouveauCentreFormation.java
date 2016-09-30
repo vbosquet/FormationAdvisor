@@ -1,7 +1,6 @@
 package com.company.formationadvisor.taches_asynchrones;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.company.formationadvisor.modeles.IPAddress;
 
@@ -11,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -82,7 +78,6 @@ public class CreerNouveauCentreFormation extends AsyncTask<String, String, Strin
     @Override
     protected void onPostExecute(String string) {
         super.onPostExecute(string);
-        Log.e("STRING", string);
         try {
             callback.recuperationIdCentreFormation(string);
         } catch (JSONException e) {

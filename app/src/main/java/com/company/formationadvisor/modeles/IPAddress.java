@@ -3,7 +3,7 @@ package com.company.formationadvisor.modeles;
 
 public class IPAddress {
 
-    String ipAddress = "192.168.0.110";
+    String ipAddress = "192.168.0.100";
 
     public IPAddress() {}
 

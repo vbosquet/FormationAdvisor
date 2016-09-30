@@ -4,35 +4,44 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.taches_asynchrones.AjouterLocationCentreFormation;
-import com.company.formationadvisor.taches_asynchrones.CreerNouveauCentreFormation;
-import com.company.formationadvisor.taches_asynchrones.GetCoordinatesFromAddress;
+import com.company.formationadvisor.modeles.Organisme;
+import com.company.formationadvisor.taches_asynchrones.RechercherFormationParIdUtilisateur;
+import com.company.formationadvisor.taches_asynchrones.RechercherParIdCentreFormation;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 
-public class NouveauCentreFormation extends AppCompatActivity implements CreerNouveauCentreFormation.ICreationCentreFormation {
+
+public class NouveauCentreFormation extends AppCompatActivity implements
+        RechercherFormationParIdUtilisateur.IRechercherFormationParIdUtilisateur,
+        RechercherParIdCentreFormation.IRechercheParIdCentreFormation, AdapterView.OnItemSelectedListener {
 
     EditText etablissement, rue, codePostal, localite, telephone, email, siteInternet;
-    JSONObject jsonObject;
-    String idCentreFormation, token;
+    String token;
     Intent intent;
     SharedPreferences preferences;
     int idUtilisateur;
     IPAddress ipAddress;
+    ArrayList<String> menuItems, listeNomEtablissement, listIdCentreFormation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +66,14 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
         token = preferences.getString("token", "");
 
         ipAddress = new IPAddress();
+
+        listeNomEtablissement = new ArrayList<>();
+        listIdCentreFormation = new ArrayList<>();
+        menuItems = new ArrayList<>();
+        menuItems.add("Ajouter organisme");
+
+        RechercherFormationParIdUtilisateur rechercherFormationParIdUtilisateur = new RechercherFormationParIdUtilisateur(this, ipAddress);
+        rechercherFormationParIdUtilisateur.execute(String.valueOf(idUtilisateur), token);
     }
 
     public void continuerEnregistrementFormation(View view) {
@@ -70,21 +87,26 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
                 siteInternet.getText().toString().equals("")){
             Toast.makeText(this, "Vous devez remplir tous les champs.", Toast.LENGTH_SHORT).show();
         } else {
-            CreerNouveauCentreFormation creerNouveauCentreFormation = new CreerNouveauCentreFormation(this, ipAddress);
-            creerNouveauCentreFormation.execute(etablissement.getText().toString(), rue.getText().toString(), codePostal.getText().toString(),
-                    localite.getText().toString(), telephone.getText().toString(), email.getText().toString(),
-                    siteInternet.getText().toString(), token);
+            Organisme newOrganisme = new Organisme(etablissement.getText().toString(), rue.getText().toString(), codePostal.getText().toString(),
+                    localite.getText().toString(), telephone.getText().toString(), email.getText().toString(), siteInternet.getText().toString());
+
+            intent = new Intent(this, NouvelleFormation.class);
+            intent.putExtra("organismeData", newOrganisme);
+            startActivity(intent);
         }
     }
 
     @Override
-    public void recuperationIdCentreFormation(String string) throws JSONException {
-        jsonObject = new JSONObject(string);
-        idCentreFormation = jsonObject.getString("id_centre_formation");
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.drop_down_menu, menu);
+        MenuItem item = menu.findItem(R.id.nom_etablissement_formation);
+        final Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.activity_drop_down_menu, menuItems);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
-        intent = new Intent(this, NouvelleFormation.class);
-        intent.putExtra("id_centre_formation", idCentreFormation);
-        startActivity(intent);
+        return true;
     }
 
     @Override
@@ -96,5 +118,61 @@ public class NouveauCentreFormation extends AppCompatActivity implements CreerNo
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void afficherInfoFormation(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
+
+            for (int i = 0; i<jsonArray.length(); i++) {
+                JSONObject jsonData = jsonArray.getJSONObject(i);
+                String idCentreFormation = jsonData.getString("id_centre_formation");
+
+                RechercherParIdCentreFormation rechercherParIdCentreFormation = new RechercherParIdCentreFormation(this, ipAddress);
+                rechercherParIdCentreFormation.execute(idCentreFormation, token);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void afficherInfoCentreFormation(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            String etablissement = jsonObject.getString("libelle");
+            String idEtablissement = jsonObject.getString("id_centre_formation");
+            String dernierNomAjoute = menuItems.get(menuItems.size() - 1);
+
+            if (!etablissement.equals(dernierNomAjoute)) {
+                menuItems.add(etablissement);
+                listeNomEtablissement.add(etablissement);
+                listIdCentreFormation.add(idEtablissement);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String itemSelected = String.valueOf(menuItems.get(position));
+
+        for (int i = 0; i<listeNomEtablissement.size(); i++) {
+            if (itemSelected.equals(listeNomEtablissement.get(i))) {
+                intent = new Intent(getApplicationContext(), NouvelleFormation.class);
+                intent.putExtra("id_centre_formation", listIdCentreFormation.get(i));
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

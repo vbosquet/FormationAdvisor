@@ -16,25 +16,24 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.company.formationadvisor.R;
-import com.company.formationadvisor.db.UtilisateurDAO;
 import com.company.formationadvisor.modeles.IPAddress;
-import com.company.formationadvisor.modeles.Utilisateur;
+import com.company.formationadvisor.modeles.Organisme;
+import com.company.formationadvisor.taches_asynchrones.CreerNouveauCentreFormation;
 import com.company.formationadvisor.taches_asynchrones.CreerNouvelleFormation;
-import com.company.formationadvisor.taches_asynchrones.SuppressionCentreFormation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class NouvelleFormation extends AppCompatActivity implements CreerNouvelleFormation.ICreationFormation,
-        SuppressionCentreFormation.ISuppressionCentreFormation{
+        CreerNouveauCentreFormation.ICreationCentreFormation {
 
     EditText nomFormation, dateDebut, dateFin, description;
-    JSONObject jsonObject;
-    String message, token, idCentreFormation;
+    String token;
     SharedPreferences preferences;
     Integer idUtilisateur;
     Intent intent;
     IPAddress ipAddress;
+    Organisme newOrganisme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,19 +55,20 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
         token = preferences.getString("token", "");
 
         ipAddress = new IPAddress();
+        newOrganisme = new Organisme();
 
         Bundle extra = this.getIntent().getExtras();
 
         if (extra != null) {
-            idCentreFormation = extra.getString("id_centre_formation");
+            newOrganisme = (Organisme) extra.getSerializable("organismeData");
         }
     }
 
     @Override
     public void confirmationCreation(String string) {
         try {
-            jsonObject = new JSONObject(string);
-            message = jsonObject.getString("success");
+            JSONObject jsonObject = new JSONObject(string);
+            String message = jsonObject.getString("success");
 
             if(message.equals("true")) {
                 Toast.makeText(this, "Enregistrement réussi", Toast.LENGTH_SHORT).show();
@@ -94,20 +94,29 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
                 description.getText().toString().equals("")) {
             Toast.makeText(this, "Vous devez remplir tous les champs.", Toast.LENGTH_SHORT).show();
         } else {
-            CreerNouvelleFormation tache = new CreerNouvelleFormation(this, ipAddress);
-            tache.execute(nomFormation.getText().toString(), dateDebut.getText().toString(),
-                    dateFin.getText().toString(), description.getText().toString(),
-                    String.valueOf(idUtilisateur), idCentreFormation, token);
+            CreerNouveauCentreFormation creerNouveauCentreFormation = new CreerNouveauCentreFormation(this, ipAddress);
+            creerNouveauCentreFormation.execute(newOrganisme.getNomOrganisme(), newOrganisme.getRue(),
+                    newOrganisme.getCodePostal(), newOrganisme.getLocalite(), newOrganisme.getTelephone(),
+                    newOrganisme.getEmailOrganisme(), newOrganisme.getSiteInternet(), token);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.cancel_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_cancel:
+                intent = new Intent(this, TableauDeBord.class);
+                startActivity(intent);
+                return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
-                SuppressionCentreFormation suppressionCentreFormation = new SuppressionCentreFormation(this, ipAddress);
-                suppressionCentreFormation.execute(idCentreFormation, token);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -115,7 +124,13 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
     }
 
     @Override
-    public void confirmerSuppressionCentreFormation(String string) {
-        Log.i("SUPPRESSION", string);
+    public void recuperationIdCentreFormation(String string) throws JSONException {
+        JSONObject jsonObject = new JSONObject(string);
+        String idCentreFormation = jsonObject.getString("id_centre_formation");
+
+        CreerNouvelleFormation tache = new CreerNouvelleFormation(this, ipAddress);
+            tache.execute(nomFormation.getText().toString(), dateDebut.getText().toString(),
+                    dateFin.getText().toString(), description.getText().toString(),
+                    String.valueOf(idUtilisateur), idCentreFormation, token);
     }
 }
