@@ -149,10 +149,12 @@ public class Connexion extends AppCompatActivity implements ConnexionFragment.IC
                     }
 
                 } else  {
-                    Toast.makeText(this, "Votre mot de passe est incorrect.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Votre mot de passe est incorrect.", Toast.LENGTH_SHORT).show();
+                    mot_de_passe.setError("Votre mot de passe est incorrect.");
                 }
             } else {
-                Toast.makeText(this, "Votre pseudo n'existe pas ou est incorrect.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Votre pseudo n'existe pas ou est incorrect.", Toast.LENGTH_SHORT).show();
+                pseudo.setError("Votre pseudo n'existe pas ou est incorrect.");
             }
         }
     }

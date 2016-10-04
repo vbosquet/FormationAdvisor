@@ -22,6 +22,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginBottom="15dp"/>
 
         <EditText
@@ -33,6 +34,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginBottom="15dp"/>
 
         <EditText
@@ -44,6 +46,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginBottom="15dp"/>
 
         <EditText
@@ -56,6 +59,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginBottom="15dp"/>
 
         <EditText
@@ -68,6 +72,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginBottom="20dp"/>
 
         <TextView

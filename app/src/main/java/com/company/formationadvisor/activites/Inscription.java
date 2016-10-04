@@ -20,6 +20,7 @@ import com.company.formationadvisor.modeles.IPAddress;
 import com.company.formationadvisor.modeles.Utilisateur;
 import com.company.formationadvisor.taches_asynchrones.CreerNouveauToken;
 import com.company.formationadvisor.taches_asynchrones.CreerNouvelUtilisateur;
+import com.company.formationadvisor.taches_asynchrones.RechercherEmailUtilisateur;
 import com.company.formationadvisor.taches_asynchrones.RechercherUtilisateurParPseudo;
 
 import org.json.JSONException;
@@ -35,10 +36,11 @@ import java.util.regex.Pattern;
 public class Inscription extends AppCompatActivity implements InscriptionFragment.IInscription,
         CreerNouvelUtilisateur.ICreationUtilisateur,
         CreerNouveauToken.ICreationNouveauToken,
-        RechercherUtilisateurParPseudo.IRechercheUtilisateurParPseudo {
+        RechercherUtilisateurParPseudo.IRechercheUtilisateurParPseudo,
+        RechercherEmailUtilisateur.IRechercherEmailUtilisateur {
 
     EditText nom, prenom, pseudo, mot_de_passe, email;
-    String motDePasseCrypte, hexString, message;
+    String motDePasseCrypte, hexString;
     byte[] salt;
     Intent intent;
     IPAddress ipAddress;
@@ -76,8 +78,8 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
 
         motDePasseCrypte = crypterMotDePasse(mot_de_passe.getText().toString());
 
-        RechercherUtilisateurParPseudo tache1 = new RechercherUtilisateurParPseudo(this, ipAddress);
-        tache1.execute(pseudo.getText().toString());
+        RechercherUtilisateurParPseudo rechercherUtilisateurParPseudo = new RechercherUtilisateurParPseudo(this, ipAddress);
+        rechercherUtilisateurParPseudo.execute(pseudo.getText().toString());
     }
 
     public boolean isValidPassword(String password) {
@@ -122,13 +124,10 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
 
     public String crypterMotDePasse(String passwordToHash) throws NoSuchAlgorithmException, NoSuchProviderException {
         salt = getSalt();
-
         hexString = byteToString(salt);
-
-        Log.i("CONTENT_SEL", hexString);
-
         String securePassword = getSecurePassword(passwordToHash, salt);
         return securePassword;
+
     }
 
     public String getSecurePassword(String passwordToHash, byte[] salt) throws NoSuchAlgorithmException {
@@ -168,7 +167,6 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
         try {
             JSONObject jsonObject = new JSONObject(string);
             String message = jsonObject.getString("success");
-            Log.i("CONTENT_MESSAGE", message);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -198,34 +196,55 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
 
             try {
                 JSONObject jsonObject = new JSONObject(string);
-                message = jsonObject.getString("success");
+                String message = jsonObject.getString("success");
 
                 if (message.equals("false")) {
 
-                    if (!isValidEmail(email.getText().toString())) {
-                        Toast.makeText(this, "Adresse email invalide", Toast.LENGTH_SHORT).show();
-                    } else if (!isValidPassword(mot_de_passe.getText().toString())) {
-                        Toast.makeText(this, "Mot de passe invalide", Toast.LENGTH_SHORT).show();
-                    } else {
-                        CreerNouveauToken tache2 = new CreerNouveauToken(this, ipAddress);
-                        tache2.execute(hexString);
-
-                        CreerNouvelUtilisateur tache3 = new CreerNouvelUtilisateur(this, ipAddress);
-                        tache3.execute(nom.getText().toString(), prenom.getText().toString(),
-                                pseudo.getText().toString(), motDePasseCrypte,
-                                email.getText().toString(),
-                                hexString);
-
-                        intent = new Intent(this, TableauDeBord.class);
-                        startActivity(intent);
-                    }
+                    RechercherEmailUtilisateur rechercherEmailUtilisateur = new RechercherEmailUtilisateur(this, ipAddress);
+                    rechercherEmailUtilisateur.execute(email.getText().toString());
 
                 } else {
-                    Toast.makeText(this, "Ce pseudo existe déjà", Toast.LENGTH_SHORT).show();
+                    pseudo.setError("Ce pseudo existe déjà.");
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void verificationEmail(String string) {
+        try {
+            JSONObject jsonObject = new JSONObject(string);
+            String message = jsonObject.getString("success");
+
+            if (message.equals("false")) {
+
+                if (!isValidEmail(email.getText().toString())) {
+                    email.setError("Ton email est invalide");
+                } else if (!isValidPassword(mot_de_passe.getText().toString())) {
+                    mot_de_passe.setError("Ton mot de passe est invalide. Celui-ci doit contenir au moins 6 caractères (chiffres, lettres minuscules et majuscules, caractères spéciaux)");
+                } else {
+                    CreerNouveauToken creerNouveauToken = new CreerNouveauToken(this, ipAddress);
+                    creerNouveauToken.execute(hexString);
+
+                    CreerNouvelUtilisateur creerNouvelUtilisateur = new CreerNouvelUtilisateur(this, ipAddress);
+                    creerNouvelUtilisateur.execute(nom.getText().toString(), prenom.getText().toString(),
+                            pseudo.getText().toString(), motDePasseCrypte,
+                            email.getText().toString(),
+                            hexString);
+
+                    intent = new Intent(this, TableauDeBord.class);
+                    startActivity(intent);
+                }
+
+            } else {
+                email.setError("Cet email existe déjà.");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

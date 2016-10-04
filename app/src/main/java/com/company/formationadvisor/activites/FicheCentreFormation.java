@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.company.formationadvisor.R;
 import com.company.formationadvisor.modeles.Formation;
@@ -79,40 +80,45 @@ public class FicheCentreFormation extends AppCompatActivity implements
 
     @Override
     public void afficherInfoFormation(String string) {
-
         try {
             jsonObject = new JSONObject(string);
             JSONArray jsonArray = jsonObject.getJSONArray("liste_formation");
 
-            listeIdFormation = new ArrayList();
-            listeNomFormation = new ArrayList();
-            listeDateDebut = new ArrayList();
-            listeDateFin = new ArrayList();
-            listeDescription = new ArrayList();
+            if (jsonArray.length() > 0) {
 
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject jsonData = jsonArray.getJSONObject(i);
-                listeIdFormation.add((jsonData.getString("id_formation")));
-                listeNomFormation.add(jsonData.getString("libelle"));
-                listeDateDebut.add(jsonData.getString("date_de_debut"));
-                listeDateFin.add(jsonData.getString("date_de_fin"));
-                listeDescription.add(jsonData.getString("description"));
-            }
+                listeIdFormation = new ArrayList();
+                listeNomFormation = new ArrayList();
+                listeDateDebut = new ArrayList();
+                listeDateFin = new ArrayList();
+                listeDescription = new ArrayList();
 
-            listeFormation = new ArrayList<>();
+                for (int i=0; i<jsonArray.length(); i++) {
+                    JSONObject jsonData = jsonArray.getJSONObject(i);
+                    listeIdFormation.add((jsonData.getString("id_formation")));
+                    listeNomFormation.add(jsonData.getString("libelle"));
+                    listeDateDebut.add(jsonData.getString("date_de_debut"));
+                    listeDateFin.add(jsonData.getString("date_de_fin"));
+                    listeDescription.add(jsonData.getString("description"));
+                }
 
-            for(int i=0; i<listeNomFormation.size(); i++) {
-                nomFormation = (String) listeNomFormation.get(i);
-                dateDebut = (String) listeDateDebut.get(i);
-                dateFin = (String) listeDateFin.get(i);
-                description = (String) listeDescription.get(i);
+                listeFormation = new ArrayList<>();
 
-                formation = new Formation(nomFormation, dateDebut, dateFin, description);
-                listeFormation.add(formation);
+                for(int i=0; i<listeNomFormation.size(); i++) {
+                    nomFormation = (String) listeNomFormation.get(i);
+                    dateDebut = (String) listeDateDebut.get(i);
+                    dateFin = (String) listeDateFin.get(i);
+                    description = (String) listeDescription.get(i);
 
-                listView = (ListView) findViewById(R.id.liste_formation);
-                FormationAdaptater formationAdaptater = new FormationAdaptater(this, listeFormation);
-                listView.setAdapter(formationAdaptater);
+                    formation = new Formation(nomFormation, dateDebut, dateFin, description);
+                    listeFormation.add(formation);
+
+                    listView = (ListView) findViewById(R.id.liste_formation);
+                    FormationAdaptater formationAdaptater = new FormationAdaptater(this, listeFormation);
+                    listView.setAdapter(formationAdaptater);
+                }
+
+            } else {
+                Toast.makeText(this, "Aucune formation n'a encore été référencée.", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {

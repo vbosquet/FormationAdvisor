@@ -64,7 +64,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:autoLink="web"/>
 
     </LinearLayout>
 
@@ -98,7 +99,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:autoLink="email"/>
 
         <TextView
             android:layout_width="match_parent"

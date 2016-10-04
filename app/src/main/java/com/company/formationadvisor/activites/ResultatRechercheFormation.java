@@ -9,6 +9,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,8 +83,6 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                     listeIdCentreFormation.add(jsonData.getString("id_centre_formation"));
                 }
 
-
-
                 ArrayAdapter adapter = new ArrayAdapter(this, R.layout.activity_listview, listeLibelleFormation);
                 final ListView listView = (ListView) findViewById(R.id.resultat_recherche_formation);
                 listView.setAdapter(adapter);
@@ -91,12 +90,9 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Object o = listView.getItemAtPosition(position);
-                        String action = o.toString();
+                        for (int i = 0; i<listeLibelleFormation.size(); i++) {
 
-                        for (int i = 0; i<listeLibelleFormation.size(); i++){
-
-                            if (action.equals(listeLibelleFormation.get(i))) {
+                            if (position == i) {
 
                                 preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                 SharedPreferences.Editor editor = preferences.edit();
@@ -151,8 +147,12 @@ public class ResultatRechercheFormation extends AppCompatActivity implements Rec
     private void handleIntent(Intent intent) {
         if (intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            RechercheParMotCle rechercheParMotCle = new RechercheParMotCle(this, ipAddress);
-            rechercheParMotCle.execute(query, token);
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("motCle", query);
+            editor.apply();
+            Intent newIntent = new Intent(this, ResultatRechercheFormation.class);
+            startActivity(newIntent);
         }
     }
 }

@@ -75,8 +75,8 @@ public class NouvelleFormation extends AppCompatActivity implements CreerNouvell
                 intent = new Intent(this, MaListeDeFormations.class);
                 startActivity(intent);
 
-            } else if(message.equals("exist")) {
-                Toast.makeText(this, "Cette formation existe déjà.", Toast.LENGTH_SHORT).show();
+            //} else if(message.equals("exist")) {
+                //Toast.makeText(this, "Cette formation existe déjà.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Echec de l'enregistrement", Toast.LENGTH_SHORT).show();
             }

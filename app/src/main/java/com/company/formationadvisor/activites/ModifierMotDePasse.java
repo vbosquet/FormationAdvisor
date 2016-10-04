@@ -198,8 +198,6 @@ public class ModifierMotDePasse extends AppCompatActivity implements RechercherU
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SuppressionEvaluation suppressionEvaluation = new SuppressionEvaluation(ModifierMotDePasse.this, ipAddress);
-                suppressionEvaluation.execute(pseudo, token);
 
                 RechercherFormationParIdUtilisateur rechercherFormationParIdUtilisateur = new RechercherFormationParIdUtilisateur(ModifierMotDePasse.this, ipAddress);
                 rechercherFormationParIdUtilisateur.execute(String.valueOf(idUtilisateur), token);
@@ -283,6 +281,9 @@ public class ModifierMotDePasse extends AppCompatActivity implements RechercherU
 
                 SuppressionLocalite suppressionLocalite = new SuppressionLocalite(this, ipAddress);
                 suppressionLocalite.execute(idCentreFormation, token);
+
+                SuppressionEvaluation suppressionEvaluation = new SuppressionEvaluation(ModifierMotDePasse.this, ipAddress);
+                suppressionEvaluation.execute(pseudo, token);
             }
 
 
