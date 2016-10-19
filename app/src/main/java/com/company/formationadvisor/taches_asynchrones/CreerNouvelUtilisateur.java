@@ -33,10 +33,8 @@ public class CreerNouvelUtilisateur extends AsyncTask<String, String, String>{
         String email = params[4];
         String token = params[5];
 
-        URL url;
-
         try {
-            url = new URL("http://"+ip+"/webService_Android/ajouter_utilisateur.php?nom_utilisateur="+nom+
+            URL url = new URL("http://"+ip+"/webService_Android/ajouter_utilisateur.php?nom_utilisateur="+nom+
                     "&prenom_utilisateur="+prenom+"&pseudo="+pseudo+
                     "&mot_de_passe="+motDePasse+"&email="+email+"&token="+token+"&admin=false");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -54,6 +52,7 @@ public class CreerNouvelUtilisateur extends AsyncTask<String, String, String>{
 
             bufferedReader.close();
             inputStream.close();
+
 
             return stringBuilder.toString();
 

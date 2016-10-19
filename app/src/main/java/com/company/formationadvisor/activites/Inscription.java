@@ -113,9 +113,11 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
             String message = jsonObject.getString("success");
 
             if(message.equals("true")) {
-                Toast.makeText(this, "Enregistrement réussi", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Inscription réussie", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, TableauDeBord.class);
+                startActivity(intent);
             } else {
-                Toast.makeText(this, "Echec de l'enregistrement", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Echec de l'inscription", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -167,6 +169,15 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
         try {
             JSONObject jsonObject = new JSONObject(string);
             String message = jsonObject.getString("success");
+
+            if (message.equals("true")) {
+
+                CreerNouvelUtilisateur creerNouvelUtilisateur = new CreerNouvelUtilisateur(this, ipAddress);
+                creerNouvelUtilisateur.execute(nom.getText().toString(), prenom.getText().toString(),
+                    pseudo.getText().toString(), motDePasseCrypte,
+                    email.getText().toString(),
+                    hexString);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -228,15 +239,6 @@ public class Inscription extends AppCompatActivity implements InscriptionFragmen
                 } else {
                     CreerNouveauToken creerNouveauToken = new CreerNouveauToken(this, ipAddress);
                     creerNouveauToken.execute(hexString);
-
-                    CreerNouvelUtilisateur creerNouvelUtilisateur = new CreerNouvelUtilisateur(this, ipAddress);
-                    creerNouvelUtilisateur.execute(nom.getText().toString(), prenom.getText().toString(),
-                            pseudo.getText().toString(), motDePasseCrypte,
-                            email.getText().toString(),
-                            hexString);
-
-                    intent = new Intent(this, TableauDeBord.class);
-                    startActivity(intent);
                 }
 
             } else {

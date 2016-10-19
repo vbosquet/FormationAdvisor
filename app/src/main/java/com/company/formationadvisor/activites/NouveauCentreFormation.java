@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,7 +42,7 @@ public class NouveauCentreFormation extends AppCompatActivity implements
     SharedPreferences preferences;
     int idUtilisateur;
     IPAddress ipAddress;
-    ArrayList<String> menuItems, listeNomEtablissement, listIdCentreFormation;
+    ArrayList<String> menuItems, listeNomEtablissement, listIdCentreFormation, listeRueEtablissement, listeCodePostalEtablissement, listeLocaliteEtablissement, listeTelephoneEtablissement, listeEmailEtablissement, listeSiteInternetEtablissement;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,12 @@ public class NouveauCentreFormation extends AppCompatActivity implements
 
         listeNomEtablissement = new ArrayList<>();
         listIdCentreFormation = new ArrayList<>();
+        listeRueEtablissement = new ArrayList<>();
+        listeCodePostalEtablissement = new ArrayList<>();
+        listeLocaliteEtablissement = new ArrayList<>();
+        listeTelephoneEtablissement = new ArrayList<>();
+        listeEmailEtablissement = new ArrayList<>();
+        listeSiteInternetEtablissement = new ArrayList<>();
         menuItems = new ArrayList<>();
         menuItems.add("Ajouter organisme");
 
@@ -143,14 +150,26 @@ public class NouveauCentreFormation extends AppCompatActivity implements
     public void afficherInfoCentreFormation(String string) {
         try {
             JSONObject jsonObject = new JSONObject(string);
-            String etablissement = jsonObject.getString("libelle");
+            String nomEtablissement = jsonObject.getString("libelle");
+            String rueEtablissement = jsonObject.getString("adresse");
+            String codePostalEtablissement = jsonObject.getString("code_postal");
+            String localiteEtablissement = jsonObject.getString("localite");
+            String telephoneEtablissement = jsonObject.getString("numero_de_telephone");
+            String emailEtablissement = jsonObject.getString("email");
+            String siteInternetEtablissement = jsonObject.getString("site_internet");
             String idEtablissement = jsonObject.getString("id_centre_formation");
             String dernierNomAjoute = menuItems.get(menuItems.size() - 1);
 
-            if (!etablissement.equals(dernierNomAjoute)) {
-                menuItems.add(etablissement);
-                listeNomEtablissement.add(etablissement);
+            if (!nomEtablissement.equals(dernierNomAjoute)) {
+                menuItems.add(nomEtablissement);
+                listeNomEtablissement.add(nomEtablissement);
                 listIdCentreFormation.add(idEtablissement);
+                listeRueEtablissement.add(rueEtablissement);
+                listeCodePostalEtablissement.add(codePostalEtablissement);
+                listeLocaliteEtablissement.add(localiteEtablissement);
+                listeTelephoneEtablissement.add(telephoneEtablissement);
+                listeEmailEtablissement.add(emailEtablissement);
+                listeSiteInternetEtablissement.add(siteInternetEtablissement);
             }
 
         } catch (JSONException e) {
@@ -164,8 +183,10 @@ public class NouveauCentreFormation extends AppCompatActivity implements
 
         for (int i = 0; i<listeNomEtablissement.size(); i++) {
             if (itemSelected.equals(listeNomEtablissement.get(i))) {
+                Organisme newOrganisme = new Organisme(listeNomEtablissement.get(i), listeRueEtablissement.get(i), listeCodePostalEtablissement.get(i),
+                        listeLocaliteEtablissement.get(i), listeTelephoneEtablissement.get(i), listeEmailEtablissement.get(i), listeSiteInternetEtablissement.get(i));
                 intent = new Intent(getApplicationContext(), NouvelleFormation.class);
-                intent.putExtra("id_centre_formation", listIdCentreFormation.get(i));
+                intent.putExtra("organismeData", newOrganisme);
                 startActivity(intent);
             }
         }
